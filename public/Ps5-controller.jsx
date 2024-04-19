@@ -10,12 +10,13 @@ Title: Playstation 5 Dualsense
 
 import React from 'react'
 import { useGLTF } from '@react-three/drei'
+import { degreesToRadians } from '@/lib/inputMapper';
 
 export default function Model(props) {
   const { nodes, materials } = useGLTF('/ps5-controller.gltf')
   return (
     <group {...props} dispose={null}>
-      <group rotation={[-Math.PI / 2, 0, 0]} scale={1}>
+      <group rotation={[degreesToRadians(-90), degreesToRadians(0), degreesToRadians(0)]} scale={props.scaleFactor}>
         <group rotation={[Math.PI / 2, 0, 0]}>
           <mesh geometry={nodes.defaultMaterial.geometry} material={materials['1011']} />
           <mesh geometry={nodes.defaultMaterial_1.geometry} material={materials['1001']} />
