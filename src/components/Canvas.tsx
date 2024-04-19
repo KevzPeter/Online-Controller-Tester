@@ -2,10 +2,10 @@
 import { Canvas } from "@react-three/fiber";
 import SceneContainer from "./Scene";
 
-const CanvasContainer = (props: any) => {
+const CanvasContainer = () => {
 
     return (
-        <div className="container basis-1/2 border-2 rounded-lg border-solid border-slate-800">
+        <div className="basis-1/2">
             <Canvas>
                 <SceneContainer />
             </Canvas>
