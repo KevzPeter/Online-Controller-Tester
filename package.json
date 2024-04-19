@@ -1,7 +1,9 @@
 {
   "name": "ps5-controller-3d",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "private": true,
+  "author": "KevzPeter",
+  "repository": "https://github.com/KevzPeter/PS5-Controller-Tester",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
