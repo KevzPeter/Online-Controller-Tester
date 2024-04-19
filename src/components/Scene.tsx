@@ -7,7 +7,7 @@ import { degreesToRadians, roundToOneDecimalPlace } from "@/lib/inputMapper";
 
 const SceneContainer = () => {
 
-    const [scaleFactor, setScaleFactor] = useState(1);
+    const [scaleFactor, setScaleFactor] = useState(0.9);
 
     const orbitControlsRef: any = useRef(null);
     useFrame(() => {
@@ -21,7 +21,7 @@ const SceneContainer = () => {
                     console.log(scaleFactor);
                 }
                 if (controller.buttons[7].pressed) {
-                    setScaleFactor(Math.min(1, scaleFactor + 0.005));
+                    setScaleFactor(Math.min(0.9, scaleFactor + 0.005));
                     console.log(scaleFactor);
                 }
                 orbitControlsRef.current.setAzimuthalAngle(-x * degreesToRadians(180));
