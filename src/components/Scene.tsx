@@ -1,24 +1,53 @@
 "use client";
-import { useState, Suspense } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useState, Suspense, useRef, useEffect } from "react";
+import { useFrame } from "@react-three/fiber";
 import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import * as THREE from "three";
 import PS5Controller from "../../public/Ps5-controller";
+import { degreesToRadians, roundToOneDecimalPlace } from "@/lib/inputMapper";
 
-const Scene = () => {
+const SceneContainer = () => {
+
+    const [scaleFactor, setScaleFactor] = useState(1);
+
+    const orbitControlsRef: any = useRef(null);
+    useFrame(() => {
+        if (orbitControlsRef.current) {
+            const controller = navigator.getGamepads()[0];
+            if (controller) {
+                const x = controller.axes[2];
+                const y = controller.axes[3];
+                if (controller.buttons[6].pressed) {
+                    setScaleFactor(Math.max(0.5, scaleFactor - 0.005));
+                    console.log(scaleFactor);
+                }
+                if (controller.buttons[7].pressed) {
+                    setScaleFactor(Math.min(1, scaleFactor + 0.005));
+                    console.log(scaleFactor);
+                }
+                orbitControlsRef.current.setAzimuthalAngle(-x * degreesToRadians(180));
+                orbitControlsRef.current.setPolarAngle((y + 1) * degreesToRadians(90));
+                orbitControlsRef.current.update();
+            }
+        }
+    })
+
+    useEffect(() => {
+        if (orbitControlsRef.current) {
+            console.log(orbitControlsRef.current);
+        }
+    }, [orbitControlsRef.current]);
+
     return (
-        <div className="container basis-1/2 border-2 rounded-lg border-solid border-slate-800">
-            <Canvas>
-                <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
-                <ambientLight />
-                <OrbitControls />
-                <Suspense fallback={null}>
-                    <PS5Controller />
-                    <Environment preset="sunset" />
-                </Suspense>
-            </Canvas>
-        </div>
+        <>
+            <PerspectiveCamera makeDefault position={[0, 0, 2.5]} />
+            <ambientLight />
+            <OrbitControls ref={orbitControlsRef} minPolarAngle={degreesToRadians(0)} maxPolarAngle={degreesToRadians(180)} enablePan={false} enableRotate={false} enableZoom={false} />
+            <Suspense fallback={null}>
+                <PS5Controller scaleFactor={scaleFactor} />
+                <Environment preset="sunset" />
+            </Suspense>
+        </>
     )
 }
 
-export default Scene;
+export default SceneContainer;
