@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Progress } from "@/components/ui/progress"
 import { convertAnalogToSlider } from "@/lib/inputMapper";
 import { Badge } from "./ui/badge";
+import CanvasContainer from "./Canvas";
 
 const GamePad = () => {
     const [controllerName, setControllerName] = useState("No controller detected");
@@ -70,7 +71,7 @@ const GamePad = () => {
     return (
         <>
             <div className="basis-1/2 container flex flex-col mx-auto gap-y-4">
-                <span>Controller: {controllerName}</span>
+                <span>Controller: <span className="font-bold text-gray-400">{controllerName}</span></span>
                 <span>Left Analog X: {x1}</span>
                 <Progress value={convertAnalogToSlider(x1)} />
                 <span>Left Analog Y: {y1}</span>
@@ -107,6 +108,7 @@ const GamePad = () => {
                 </div>
             </div>
             <ToastContainer />
+            <CanvasContainer />
         </>
     )
 }
