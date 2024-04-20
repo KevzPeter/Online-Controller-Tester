@@ -6,10 +6,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Progress } from "@/components/ui/progress"
 import { convertAnalogToSlider } from "@/lib/inputMapper";
 import { Badge } from "./ui/badge";
-import CanvasContainer from "./Canvas";
+import { buttonMapper } from "@/lib/buttonMapper";
 
 const GamePad = () => {
     const [controllerName, setControllerName] = useState("No controller detected");
+    const [controllerType, setControllerType] = useState("");
     const [x1, setX1] = useState(0);
     const [y1, setY1] = useState(0);
     const [x2, setX2] = useState(0);
@@ -40,6 +41,15 @@ const GamePad = () => {
             const controller = navigator.getGamepads()[0];
             if (controller) {
                 setControllerName(controller.id);
+                if (controller.id.toLowerCase().startsWith("xbox")) {
+                    setControllerType("xbox")
+                }
+                else if (controller.id.toLowerCase().startsWith("dualsense")) {
+                    setControllerType("dualsense")
+                }
+                else {
+                    setControllerType("");
+                }
                 setX1(controller.axes[0]);
                 setY1(controller.axes[1]);
                 setX2(controller.axes[2]);
@@ -61,7 +71,7 @@ const GamePad = () => {
                 setLeft(controller.buttons[14].pressed);
                 setRight(controller.buttons[15].pressed);
                 setPower(controller.buttons[16].pressed);
-                setTouchpad(controller.buttons[17].pressed);
+                setTouchpad(controller.buttons[17]?.pressed); // xbox controllers do not have this button
             }
         }, 50);
 
@@ -80,30 +90,30 @@ const GamePad = () => {
             <span>Right Analog Y: {y2}</span>
             <Progress value={convertAnalogToSlider(y2)} />
             <div className="flex gap-x-4">
-                <Badge className={xPressed ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>╳</Badge>
-                <Badge className={circlePressed ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>◯</Badge>
-                <Badge className={squarePressed ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>□</Badge>
-                <Badge className={trianglePressed ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>△</Badge>
+                <Badge className={"text-lg " + (xPressed ? "bg-green-800" : "bg-slate-800")}>{controllerType ? buttonMapper(0, controllerType) : "1"}</Badge>
+                <Badge className={"text-lg " + (circlePressed ? "bg-green-800" : "bg-slate-800")}>{controllerType ? buttonMapper(1, controllerType) : "2"}</Badge>
+                <Badge className={"text-lg " + (squarePressed ? "bg-green-800" : "bg-slate-800")}>{controllerType ? buttonMapper(2, controllerType) : "3"}</Badge>
+                <Badge className={"text-lg " + (trianglePressed ? "bg-green-800" : "bg-slate-800")}>{controllerType ? buttonMapper(3, controllerType) : "4"}</Badge>
             </div>
             <div className="flex gap-x-4">
-                <Badge className={up ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>🔼</Badge>
-                <Badge className={down ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>🔽</Badge>
-                <Badge className={left ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>◀️</Badge>
-                <Badge className={right ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>▶️</Badge>
+                <Badge className={"text-lg " + (up ? "bg-green-800" : "bg-slate-800")}>🔼</Badge>
+                <Badge className={"text-lg " + (down ? "bg-green-800" : "bg-slate-800")}>🔽</Badge>
+                <Badge className={"text-lg " + (left ? "bg-green-800" : "bg-slate-800")}>◀️</Badge>
+                <Badge className={"text-lg " + (right ? "bg-green-800" : "bg-slate-800")}>▶️</Badge>
             </div>
             <div className="flex gap-x-4">
-                <Badge className={l1 ? "bg-green-800  text-lg" : "bg-slate-800  text-lg text-lg"}>L1</Badge>
-                <Badge className={r1 ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>R1</Badge>
-                <Badge className={l2 ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>L2</Badge>
-                <Badge className={r2 ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>R2</Badge>
-                <Badge className={l3 ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>L3</Badge>
-                <Badge className={r3 ? "bg-green-800  text-lg" : "bg-slate-800  text-lg"}>R3</Badge>
+                <Badge className={"text-lg " + (l1 ? "bg-green-800" : "bg-slate-800")}>L1</Badge>
+                <Badge className={"text-lg " + (r1 ? "bg-green-800" : "bg-slate-800")}>R1</Badge>
+                <Badge className={"text-lg " + (l2 ? "bg-green-800" : "bg-slate-800")}>L2</Badge>
+                <Badge className={"text-lg " + (r2 ? "bg-green-800" : "bg-slate-800")}>R2</Badge>
+                <Badge className={"text-lg " + (l3 ? "bg-green-800" : "bg-slate-800")}>L3</Badge>
+                <Badge className={"text-lg " + (r3 ? "bg-green-800" : "bg-slate-800")}>R3</Badge>
             </div>
             <div className="flex gap-x-4">
-                <Badge className={create ? "bg-green-800 text-md" : "bg-slate-800 text-md"}>Create</Badge>
-                <Badge className={options ? "bg-green-800 text-md" : "bg-slate-800 text-md"}>Options</Badge>
-                <Badge className={touchpad ? "bg-green-800 text-md" : "bg-slate-800 text-md"}>Touchpad</Badge>
-                <Badge className={power ? "bg-green-800 text-md" : "bg-slate-800 text-md"}>PS Button</Badge>
+                <Badge className={"text-md " + (create ? "bg-green-800" : "bg-slate-800")}>Create</Badge>
+                <Badge className={"text-md " + (options ? "bg-green-800" : "bg-slate-800")}>Options</Badge>
+                <Badge className={"text-md " + (touchpad ? "bg-green-800" : "bg-slate-800")}>Touchpad</Badge>
+                <Badge className={"text-md " + (power ? "bg-green-800" : "bg-slate-800")}>PS Button</Badge>
             </div>
             <span className="mt-4"><Badge className="bg-slate-700">Tip</Badge> Use Right Analog to move camera.</span>
             <span className="mt-2"><Badge className="bg-slate-700">Tip</Badge> Use L2/R2 to zoom.</span>
