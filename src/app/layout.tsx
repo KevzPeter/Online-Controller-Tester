@@ -11,8 +11,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "PS5 Controller Tester",
-  description: "Test your PS5 Controller using this interactive 3D visualization!",
+  title: "Online Controller Tester",
+  description: "Test your Playstation DualSense or Xbox Controllers using this interactive 3D visualization!",
 };
 
 export default function RootLayout({
