@@ -7,5 +7,5 @@ export const degreesToRadians = (degrees: number): number => {
 }
 
 export const roundToOneDecimalPlace = (number: number): number => {
-    return Math.round(number * 10) / 10;
+    return parseInt(number.toFixed(1));
 }
