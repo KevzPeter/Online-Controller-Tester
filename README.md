@@ -33,9 +33,9 @@
 
 - [x] Support for Xbox Controllers
 - [x] Add 3D Xbox Controller model
-- [] Make 3D model interactive 
-    - [] Highlight active buttons
-    - [] Movable analog sticks
+- [ ] Make 3D model interactive 
+    - [ ] Highlight active buttons
+    - [ ] Movable analog sticks
 
 <!-- CONTRIBUTING -->
 ## Contributing
