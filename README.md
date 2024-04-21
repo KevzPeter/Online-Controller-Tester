@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<a username="readme-top"></a>
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/KevzPeter/Online-Controller-Tester">
+    <img src="media/PS5-Controller.png" alt="Logo" width="80" height="60">
+  </a>
 
-## Getting Started
+  <h3 align="center">Online Controller Tester</h3>
 
-First, run the development server:
+  <p align="center">
+    🎮 Test your Playstation DualSense or Xbox Controllers using this interactive 3D visualization!
+    <br />
+    <br />
+    <a href="https://online-controller-tester.vercel.app/">✨ View Demo</a>
+    ·
+    <a href="https://github.com/KevzPeter/online-controller-tester/issues">🐛 Report Bug</a>
+    ·
+    <a href="https://github.com/KevzPeter/online-controller-tester/issues">💁🏽 Request Feature</a>
+  </p>
+</div>
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<!-- DEMO -->
+## Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+<div align="center">
+<img  src="media/demo.png" alt="Screenshot" width="800" height="374">
+</div>
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+<!-- ENHANCEMENTS -->
+## Planned Enhancements
 
-## Learn More
+- [x] Support for Xbox Controllers
+- [x] Add 3D Xbox Controller model
+- [] Make 3D model interactive 
+    - [] Highlight active buttons
+    - [] Movable analog sticks
 
-To learn more about Next.js, take a look at the following resources:
+<!-- CONTRIBUTING -->
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+If you'd like to add enhancements, please fork the repo and create a pull request. You can also open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## Deploy on Vercel
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
+[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
+[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
+[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
+[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
+[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
+[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
+[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
+[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
+[product-screenshot]: images/screenshot.png
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Docker]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
+[Docker-url]: https://docker.com/
