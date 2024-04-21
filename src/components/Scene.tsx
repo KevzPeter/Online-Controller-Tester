@@ -2,9 +2,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import PS5Controller from "../../public/Ps5-controller";
-import XboxController from "../../public/Xbox-controller";
-import { degreesToRadians, roundToOneDecimalPlace } from "@/lib/inputMapper";
+import RenderController from "./RenderController";
+import { degreesToRadians } from "@/lib/inputMapper";
 
 const SceneContainer = () => {
 
@@ -46,26 +45,24 @@ const SceneContainer = () => {
     useEffect(() => {
     }, [orbitControlsRef.current]);
 
-    const RenderController = () => {
+
+    const calculateZAxisPosition = () => {
+        if (!controllerType) return 0;
         if (controllerType === 'xbox') {
-            return (
-                <XboxController scaleFactor={scaleFactor} />
-            )
+            return 20;
         }
         else if (controllerType === 'dualsense') {
-            return (
-                <PS5Controller scaleFactor={scaleFactor} />
-            )
+            return 20;
         }
-        else return null;
+        else return 0;
     }
 
     return (
         <>
-            <PerspectiveCamera makeDefault position={[0, 0, (controllerType ? (controllerType === "xbox" ? 20 : 2.5) : 0)]} />
+            <PerspectiveCamera makeDefault position={[0, 0, calculateZAxisPosition()]} />
             <ambientLight />
             <OrbitControls ref={orbitControlsRef} minPolarAngle={degreesToRadians(0)} maxPolarAngle={degreesToRadians(180)} enablePan={false} enableRotate={false} enableZoom={false} />
-            <RenderController />
+            <RenderController controllerType={controllerType} scaleFactor={scaleFactor} />
             <Environment preset="sunset" />
         </>
     )
