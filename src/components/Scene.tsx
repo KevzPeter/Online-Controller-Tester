@@ -52,7 +52,7 @@ const SceneContainer = () => {
             return 20;
         }
         else if (controllerType === 'dualsense') {
-            return 20;
+            return 2.5;
         }
         else return 0;
     }

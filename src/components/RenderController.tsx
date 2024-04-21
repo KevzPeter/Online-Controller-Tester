@@ -9,8 +9,7 @@ const RenderController = (props: { controllerType: string; scaleFactor: any; }) 
     }
     else if (props.controllerType === 'dualsense') {
         return (
-            // <PS5Controller scaleFactor={props.scaleFactor} />
-            <XboxController scaleFactor={props.scaleFactor} />
+            <PS5Controller scaleFactor={props.scaleFactor} />
         )
     }
     else return null;
