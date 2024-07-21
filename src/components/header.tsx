@@ -7,10 +7,7 @@ import { useState, useEffect } from "react";
 
 const Header = () => {
 
-    const [theme, setTheme] = useState(() => {
-        const initialTheme = localStorage.getItem("theme");
-        return initialTheme ? initialTheme : "dark";
-    });
+    const [theme, setTheme] = useState("dark");
 
     useEffect(() => {
         getThemeFromLocalStorage();
