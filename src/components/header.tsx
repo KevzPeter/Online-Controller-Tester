@@ -7,23 +7,39 @@ import { useState, useEffect } from "react";
 
 const Header = () => {
 
-    const [theme, setTheme] = useState("dark");
+    const [theme, setTheme] = useState(() => {
+        const initialTheme = localStorage.getItem("theme");
+        return initialTheme ? initialTheme : "dark";
+    });
 
     useEffect(() => {
-        // if(localStorage.getItem("theme")){
-        //     setTheme(localStorage.getItem("theme"));
-        // }
+        getThemeFromLocalStorage();
+        setClass();
+    }, [theme]);
+
+    const getThemeFromLocalStorage = () => {
+        const savedTheme = localStorage.getItem("theme");
+        if (savedTheme) {
+            setTheme(savedTheme);
+        }
+    }
+
+    const setClass = () => {
         if (theme === 'dark') {
             document.querySelector("html")?.classList.add("dark");
         }
         else {
             document.querySelector("html")?.classList.remove("dark");
         }
-    }, [theme])
+    }
+
     const toggleTheme = () => {
-        setTheme(theme === 'light' ? 'dark' : 'light');
-        console.log("Set theme to", theme)
-        localStorage.setItem("theme", theme);
+        setTheme((prevTheme) => {
+            const newTheme = prevTheme === "light" ? "dark" : "light";
+            localStorage.setItem("theme", newTheme);
+            return newTheme;
+        });
+        setClass();
     }
 
     return (
