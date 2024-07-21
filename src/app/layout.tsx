@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        "min-h-screen bg-slate-50 font-sans antialiased !p-0 !m-0 dark:bg-slate-900",
+        "flex flex-col min-h-screen bg-slate-50 font-sans antialiased !p-0 !m-0 dark:bg-slate-900",
         inter.variable
       )}>
         <Header />

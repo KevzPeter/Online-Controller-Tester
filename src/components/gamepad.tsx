@@ -4,10 +4,26 @@ import { useState, useEffect } from "react";
 import { Progress } from "@/components/ui/progress"
 import { convertAnalogToSlider } from "@/lib/inputMapper";
 import { Badge } from "./ui/badge";
-import { buttonMapper } from "@/lib/buttonMapper";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { RocketIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons"
 import ControllerAlert from "./controllerAlert";
+import DPad from "../../public/assets/Buttons Outline/Black/SVG/D-Pad.svg";
+import DPadUp from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Up.svg";
+import DPadDown from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Down.svg";
+import DPadLeft from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Left.svg";
+import DPadRight from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Right.svg";
+import Square from "../../public/assets/Buttons Outline/Black/SVG/Square.svg";
+import Circle from "../../public/assets/Buttons Outline/Black/SVG/Circle.svg";
+import Triangle from "../../public/assets/Buttons Outline/Black/SVG/Triangle.svg";
+import Cross from "../../public/assets/Buttons Outline/Black/SVG/Cross.svg";
+import L1 from "../../public/assets/Buttons Outline/Black/SVG/L1.svg";
+import R1 from "../../public/assets/Buttons Outline/Black/SVG/R1.svg";
+import L2 from "../../public/assets/Buttons Outline/Black/SVG/L2.svg";
+import R2 from "../../public/assets/Buttons Outline/Black/SVG/R2.svg";
+import L3 from "../../public/assets/Buttons Outline/Black/SVG/Left Stick Click.svg";
+import R3 from "../../public/assets/Buttons Outline/Black/SVG/Right Stick Click.svg";
+import Create from "../../public/assets/Buttons Outline/Black/SVG/Create.svg";
+import Options from "../../public/assets/Buttons Outline/Black/SVG/Options.svg";
+import TouchPad from "../../public/assets/Buttons Outline/Black/SVG/Touch Pad Press.svg";
+import Home from "../../public/assets/Buttons Outline/Black/SVG/Home.svg";
 
 const GamePad = () => {
 
@@ -83,7 +99,7 @@ const GamePad = () => {
 
 
     return (
-        <div className="basis-1/2 container flex flex-col mx-auto gap-y-4">
+        <div className="basis-1/2 container flex flex-col mx-auto gap-y-4 text-slate-900 dark:text-slate-50">
             <ControllerAlert controllerName={controllerName} />
             <span>Left Analog X: {x1}</span>
             <Progress value={convertAnalogToSlider(x1)} />
@@ -93,31 +109,30 @@ const GamePad = () => {
             <Progress value={convertAnalogToSlider(x2)} />
             <span>Right Analog Y: {y2}</span>
             <Progress value={convertAnalogToSlider(y2)} />
-            <div className="flex gap-x-4">
-                <Badge className={"text-lg " + (xPressed ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>{controllerType ? buttonMapper(0, controllerType) : "1"}</Badge>
-                <Badge className={"text-lg " + (circlePressed ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>{controllerType ? buttonMapper(1, controllerType) : "2"}</Badge>
-                <Badge className={"text-lg " + (squarePressed ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>{controllerType ? buttonMapper(2, controllerType) : "3"}</Badge>
-                <Badge className={"text-lg " + (trianglePressed ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>{controllerType ? buttonMapper(3, controllerType) : "4"}</Badge>
+            <div className="flex items-center gap-x-4">
+                {up && <DPadUp height={128} width={128} fill={"#0070f3"} />}
+                {down && <DPadDown height={128} width={128} fill={"#0070f3"} />}
+                {left && <DPadLeft height={128} width={128} fill={"#0070f3"} />}
+                {right && <DPadRight height={128} width={128} fill={"#0070f3"} />}
+                {(!up && !down && !left && !right) && <DPad height={128} width={128} fill="grey" />}
+                <Cross height={xPressed ? 60 : 64} width={64} fill={xPressed ? "#0070f3" : "grey"} />
+                <Circle height={circlePressed ? 60 : 64} width={64} fill={circlePressed ? "#0070f3" : "grey"} />
+                <Square height={squarePressed ? 60 : 64} width={64} fill={squarePressed ? "#0070f3" : "grey"} />
+                <Triangle height={trianglePressed ? 60 : 64} width={64} fill={trianglePressed ? "#0070f3" : "grey"} />
             </div>
             <div className="flex gap-x-4">
-                <Badge className={"text-lg " + (up ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>🔼</Badge>
-                <Badge className={"text-lg " + (down ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>🔽</Badge>
-                <Badge className={"text-lg " + (left ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>◀️</Badge>
-                <Badge className={"text-lg " + (right ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>▶️</Badge>
+                <L1 height={l1 ? 60 : 64} width={64} fill={l1 ? "#0070f3" : "grey"} />
+                <R1 height={r1 ? 60 : 64} width={64} fill={r1 ? "#0070f3" : "grey"} />
+                <L2 height={l2 ? 60 : 64} width={64} fill={l2 ? "#0070f3" : "grey"} />
+                <R2 height={r2 ? 60 : 64} width={64} fill={r2 ? "#0070f3" : "grey"} />
+                <L3 height={l3 ? 60 : 64} width={64} fill={l3 ? "#0070f3" : "grey"} />
+                <R3 height={r3 ? 60 : 64} width={64} fill={r3 ? "#0070f3" : "grey"} />
             </div>
             <div className="flex gap-x-4">
-                <Badge className={"text-lg " + (l1 ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>L1</Badge>
-                <Badge className={"text-lg " + (r1 ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>R1</Badge>
-                <Badge className={"text-lg " + (l2 ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>L2</Badge>
-                <Badge className={"text-lg " + (r2 ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>R2</Badge>
-                <Badge className={"text-lg " + (l3 ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>L3</Badge>
-                <Badge className={"text-lg " + (r3 ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>R3</Badge>
-            </div>
-            <div className="flex gap-x-4">
-                <Badge className={"text-md " + (create ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>Create</Badge>
-                <Badge className={"text-md " + (options ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>Options</Badge>
-                <Badge className={"text-md " + (touchpad ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>Touchpad</Badge>
-                <Badge className={"text-md " + (power ? "bg-green-800" : "bg-slate-300 dark:bg-slate-800")}>PS Button</Badge>
+                <Create height={create ? 60 : 64} width={64} fill={create ? "#0070f3" : "grey"} />
+                <Options height={options ? 60 : 64} width={64} fill={options ? "#0070f3" : "grey"} />
+                <TouchPad height={touchpad ? 60 : 64} width={64} fill={touchpad ? "#0070f3" : "grey"} />
+                <Home height={power ? 60 : 64} width={64} fill={power ? "#0070f3" : "grey"} />
             </div>
             <span className="mt-4"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> Use Right Analog to move camera.</span>
             <span className="mt-2"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> Use L2/R2 to zoom.</span>
