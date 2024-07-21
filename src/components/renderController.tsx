@@ -1,4 +1,4 @@
-import PS5Controller from "../../public/Ps5-controller";
+import PS5Controller from "../../public/Dualsense";
 import XboxController from "../../public/Xbox-controller";
 
 const RenderController = (props: { controllerType: string; scaleFactor: any; }) => {

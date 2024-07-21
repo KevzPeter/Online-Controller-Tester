@@ -1,6 +1,6 @@
 "use client";
 import { Canvas } from "@react-three/fiber";
-import SceneContainer from "./Scene";
+import SceneContainer from "./scene";
 
 const CanvasContainer = () => {
 

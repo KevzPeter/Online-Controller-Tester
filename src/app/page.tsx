@@ -1,11 +1,11 @@
-import GamePad from "@/components/GamePad";
-const CanvasContainer = lazy(() => import("../components/Canvas"));
-import Spinner from "@/components/Spinner";
+import GamePad from "@/components/gamepad";
+const CanvasContainer = lazy(() => import("../components/canvas"));
+import Spinner from "@/components/spinner";
 import { lazy, Suspense } from "react";
 
 export default function Home() {
   return (
-    <main className="flex flex-col lg:flex-row text-gray-400">
+    <main className="flex flex-col lg:flex-row text-gray-400 pt-2 pb-8">
       <GamePad />
       <Suspense fallback={<Spinner />}>
         <CanvasContainer />

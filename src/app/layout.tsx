@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../styles/globals.css";
 import { cn } from "@/lib/utils"
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(
-        "min-h-screen bg-slate-900 font-sans antialiased !p-0 !m-0",
+        "min-h-screen bg-slate-50 font-sans antialiased !p-0 !m-0 dark:bg-slate-900",
         inter.variable
       )}>
         <Header />

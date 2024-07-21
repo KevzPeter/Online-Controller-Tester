@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Environment, OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import RenderController from "./RenderController";
+import RenderController from "./renderController";
 import { degreesToRadians } from "@/lib/inputMapper";
 
 const SceneContainer = () => {
@@ -52,14 +52,14 @@ const SceneContainer = () => {
             return 20;
         }
         else if (controllerType === 'dualsense') {
-            return 2.5;
+            return 30;
         }
         else return 0;
     }
 
     return (
         <>
-            <PerspectiveCamera makeDefault position={[0, 0, calculateZAxisPosition()]} />
+            <PerspectiveCamera makeDefault position={[1, 0, calculateZAxisPosition()]} />
             <ambientLight />
             <OrbitControls ref={orbitControlsRef} minPolarAngle={degreesToRadians(0)} maxPolarAngle={degreesToRadians(180)} enablePan={false} enableRotate={false} enableZoom={false} />
             <RenderController controllerType={controllerType} scaleFactor={scaleFactor} />
