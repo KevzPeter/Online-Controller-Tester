@@ -55,7 +55,7 @@ const GamePad = () => {
     useEffect(() => {
 
         setInterval(() => {
-            const controller = navigator.getGamepads()[0];
+            const controller = navigator.getGamepads().find(gamepad => gamepad);
             if (controller) {
                 setControllerName(controller.id);
                 if (controller.id.toLowerCase().startsWith("xbox")) {
