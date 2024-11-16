@@ -25,7 +25,7 @@
 ## Demo
 
 <div align="center">
-<img  src="media/demo.png" alt="Screenshot" width="800" height="374">
+<img  src="media/demo_new.png" alt="Screenshot" width="800" height="374">
 </div>
 
 <!-- ENHANCEMENTS -->
