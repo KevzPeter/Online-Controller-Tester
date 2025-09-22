@@ -1,6 +1,6 @@
 {
   "name": "online-controller-tester",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "private": true,
   "author": "KevzPeter",
   "repository": "https://github.com/KevzPeter/Online-Controller-Tester",
@@ -18,6 +18,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@react-three/drei": "^9.105.4",
     "@react-three/fiber": "^8.16.2",
+    "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.370.0",
