@@ -1,7 +1,12 @@
 import PS5Controller from "../../public/Dualsense";
 import XboxController from "../../public/Xbox-controller";
 
-const RenderController = (props: { controllerType: string; scaleFactor: any; }) => {
+type RenderControllerProps = {
+    controllerType: string;
+    scaleFactor: number;
+};
+
+const RenderController = (props: RenderControllerProps) => {
     if (props.controllerType === 'xbox') {
         return (
             <XboxController scaleFactor={props.scaleFactor} />

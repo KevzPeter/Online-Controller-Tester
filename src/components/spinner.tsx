@@ -23,9 +23,11 @@ const Spinner = () => {
 
     useEffect(() => {
         let counter = 0;
-        setInterval(() => {
+        const interval = setInterval(() => {
             setLoadingMessage(loadingMessages[(++counter) % 6]);
-        }, 5000)
+        }, 5000);
+
+        return () => clearInterval(interval);
     }, [])
 
     return (
