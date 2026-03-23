@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Progress } from "@/components/ui/progress"
-import { convertAnalogToSlider } from "@/lib/inputMapper";
 import { Badge } from "./ui/badge";
 import ControllerAlert from "./controllerAlert";
+import AnalogStickViz from "./analogStickViz";
 import DPad from "../../public/assets/Buttons Outline/Black/SVG/D-Pad.svg";
 import DPadUp from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Up.svg";
 import DPadDown from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Down.svg";
@@ -53,8 +52,7 @@ const GamePad = () => {
     const [touchpad, setTouchpad] = useState(false);
 
     useEffect(() => {
-
-        setInterval(() => {
+        const interval = setInterval(() => {
             const controller = navigator.getGamepads().find(gamepad => gamepad);
             if (controller) {
                 setControllerName(controller.id);
@@ -94,21 +92,17 @@ const GamePad = () => {
                 setControllerName("");
             }
         }, 50);
-
+        return () => clearInterval(interval);
     }, [])
 
 
     return (
         <div className="basis-1/2 container flex flex-col mx-auto gap-y-4 text-slate-900 dark:text-slate-50">
             <ControllerAlert controllerName={controllerName} />
-            <span>Left Analog X: {x1}</span>
-            <Progress value={convertAnalogToSlider(x1)} />
-            <span>Left Analog Y: {y1}</span>
-            <Progress value={convertAnalogToSlider(y1)} />
-            <span>Right Analog X: {x2}</span>
-            <Progress value={convertAnalogToSlider(x2)} />
-            <span>Right Analog Y: {y2}</span>
-            <Progress value={convertAnalogToSlider(y2)} />
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <AnalogStickViz label="Left Stick" x={x1} y={y1} />
+                <AnalogStickViz label="Right Stick" x={x2} y={y2} />
+            </div>
             <div className="flex items-center gap-x-4">
                 {up && <DPadUp height={128} width={128} fill={"#0070f3"} />}
                 {down && <DPadDown height={128} width={128} fill={"#0070f3"} />}
