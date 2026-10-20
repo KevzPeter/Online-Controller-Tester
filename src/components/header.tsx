@@ -3,40 +3,31 @@
 import Link from "next/link";
 import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
-import { useState, useEffect } from "react";
+import { useSyncExternalStore, useEffect } from "react";
+
+const subscribeToTheme = (onChange: () => void) => {
+    window.addEventListener("storage", onChange);
+    window.addEventListener("theme-changed", onChange);
+    return () => {
+        window.removeEventListener("storage", onChange);
+        window.removeEventListener("theme-changed", onChange);
+    };
+};
+
+const getTheme = () => localStorage.getItem("theme") || "dark";
+const getServerTheme = () => "dark";
 
 const Header = () => {
 
-    const [theme, setTheme] = useState("dark");
+    const theme = useSyncExternalStore(subscribeToTheme, getTheme, getServerTheme);
 
     useEffect(() => {
-        getThemeFromLocalStorage();
-        setClass();
+        document.documentElement.classList.toggle("dark", theme === "dark");
     }, [theme]);
 
-    const getThemeFromLocalStorage = () => {
-        const savedTheme = localStorage.getItem("theme");
-        if (savedTheme) {
-            setTheme(savedTheme);
-        }
-    }
-
-    const setClass = () => {
-        if (theme === 'dark') {
-            document.querySelector("html")?.classList.add("dark");
-        }
-        else {
-            document.querySelector("html")?.classList.remove("dark");
-        }
-    }
-
     const toggleTheme = () => {
-        setTheme((prevTheme) => {
-            const newTheme = prevTheme === "light" ? "dark" : "light";
-            localStorage.setItem("theme", newTheme);
-            return newTheme;
-        });
-        setClass();
+        localStorage.setItem("theme", theme === "light" ? "dark" : "light");
+        window.dispatchEvent(new Event("theme-changed"));
     }
 
     return (

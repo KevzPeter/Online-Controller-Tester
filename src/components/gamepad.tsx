@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Battery, BatteryCharging, Gauge } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -8,10 +8,10 @@ import { Slider } from "./ui/slider";
 import ControllerAlert from "./controllerAlert";
 import AnalogStickViz from "./analogStickViz";
 import { useGamepadState } from "@/hooks/useGamepadState";
+import { useCalibrationSettings } from "@/hooks/useCalibrationSettings";
 import {
     applyAxisCalibration,
     DEFAULT_CALIBRATION_SETTINGS,
-    loadCalibrationSettings,
     saveCalibrationSettings,
     type CalibrationSettings,
 } from "@/lib/calibration";
@@ -40,7 +40,7 @@ const GamePad = () => {
     const gamepadState = useGamepadState();
 
     // Local state for UI concerns
-    const [calibration, setCalibration] = useState<CalibrationSettings>(DEFAULT_CALIBRATION_SETTINGS);
+    const calibration = useCalibrationSettings();
     const [hapticsMessage, setHapticsMessage] = useState("");
 
     // Destructure for cleaner template access
@@ -76,16 +76,12 @@ const GamePad = () => {
         key: K,
         value: CalibrationSettings[K]
     ) => {
-        setCalibration((prev) => {
-            const next = { ...prev, [key]: value };
-            saveCalibrationSettings(next);
-            window.dispatchEvent(new CustomEvent("controller-calibration-changed", { detail: next }));
-            return next;
-        });
+        const next = { ...calibration, [key]: value };
+        saveCalibrationSettings(next);
+        window.dispatchEvent(new CustomEvent("controller-calibration-changed", { detail: next }));
     };
 
     const resetCalibration = useCallback(() => {
-        setCalibration(DEFAULT_CALIBRATION_SETTINGS);
         saveCalibrationSettings(DEFAULT_CALIBRATION_SETTINGS);
         window.dispatchEvent(
             new CustomEvent("controller-calibration-changed", { detail: DEFAULT_CALIBRATION_SETTINGS })
@@ -102,7 +98,7 @@ const GamePad = () => {
             const gamepad = navigator.getGamepads().find((gp) => gp?.id === controller.name);
             if (!gamepad) throw new Error("Controller not found");
 
-            const gamepadWithHaptics = gamepad as Gamepad & {
+            const gamepadWithHaptics = gamepad as Omit<Gamepad, "vibrationActuator" | "hapticActuators"> & {
                 vibrationActuator?: {
                     playEffect?: (
                         type: string,
@@ -114,7 +110,7 @@ const GamePad = () => {
                         }
                     ) => Promise<unknown>;
                 };
-                hapticActuators?: Array<{
+                hapticActuators?: ReadonlyArray<{
                     pulse?: (value: number, duration: number) => Promise<boolean>;
                 }>;
             };
@@ -141,11 +137,6 @@ const GamePad = () => {
             setHapticsMessage("Vibration test failed.");
         }
     }, [controller.connected, controller.name]);
-
-    useEffect(() => {
-        const storedCalibration = loadCalibrationSettings();
-        setCalibration(storedCalibration);
-    }, []);
 
     return (
         <div className="basis-1/2 container flex flex-col mx-auto gap-y-4 text-slate-900 dark:text-slate-50">

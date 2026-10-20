@@ -37,6 +37,38 @@
     - [ ] Highlight active buttons
     - [ ] Movable analog sticks
 
+## Development
+
+Use Node.js 24.x and npm. With nvm, run `nvm install 24` and `nvm use 24`
+(or `nvm install` and `nvm use` with nvm-sh).
+
+```sh
+npm ci
+npm run dev
+```
+
+Open http://localhost:3000. Development and production builds use Webpack to
+preserve the SVG component loader. The app uses Next.js 16 and React 19.
+
+Before opening a pull request, run `npm run check`, which runs:
+
+- `npm run lint`: ESLint with Next.js core web vitals rules.
+- `npm run typecheck`: Generate Next.js declarations, then check TypeScript without JavaScript output.
+- `npm run build`: Production build, including downloading the Google font.
+
+GitHub Actions runs these checks on pushes and pull requests under Node.js 24.
+Use `npm start` to serve a completed production build. Controller hardware and
+browser behavior are not covered by these checks.
+
+### Vercel deployment
+
+Set the project's Node.js version to `24.x`; `package.json` also declares this
+runtime. Vercel manages the Node 24 minor and patch version. Validate a preview
+build and confirm Node 24 in its build logs before promoting to production.
+Keep the last successful deployment available for rollback. If a regression
+occurs, restore that deployment first, then revert the migration as a unit;
+do not depend on rebuilding with Node 20.
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
