@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { detectControllerType, getActiveGamepad } from "@/lib/gamepad";
 
 export type ButtonState = {
     x: boolean;
@@ -89,13 +90,6 @@ const DEFAULT_GAMEPAD_STATE: GamepadState = {
     axes: DEFAULT_AXIS_STATE,
     buttons: DEFAULT_BUTTON_STATE,
     telemetry: DEFAULT_TELEMETRY_STATE,
-};
-
-const detectControllerType = (id: string): "" | "xbox" | "dualsense" => {
-    const normalized = id.toLowerCase();
-    if (normalized.startsWith("xbox")) return "xbox";
-    if (normalized.startsWith("dualsense")) return "dualsense";
-    return "";
 };
 
 const extractGamepadData = (gamepad: Gamepad): Omit<GamepadState, "telemetry"> => {
@@ -198,7 +192,7 @@ export const useGamepadState = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            const controller = navigator.getGamepads().find((gp) => gp);
+            const controller = getActiveGamepad();
 
             if (controller) {
                 activeControllerRef.current = controller;
@@ -216,10 +210,7 @@ export const useGamepadState = () => {
                 activeControllerRef.current = null;
                 previousPollTimestampRef.current = null;
 
-                setGamepadState((prev) => ({
-                    ...prev,
-                    controller: { ...DEFAULT_CONTROLLER_STATE },
-                }));
+                setGamepadState(DEFAULT_GAMEPAD_STATE);
             }
         }, 50);
 

@@ -13,6 +13,8 @@
     "start": "next start",
     "lint": "eslint src next.config.mjs postcss.config.mjs tailwind.config.ts eslint.config.mjs",
     "typecheck": "next typegen && tsc --noEmit",
+    "model:dualsense": "node scripts/prepare-dualsense.mjs",
+    "model:xbox": "node scripts/prepare-xbox.mjs",
     "check": "npm run lint && npm run typecheck && npm run build"
   },
   "dependencies": {
