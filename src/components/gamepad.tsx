@@ -135,14 +135,16 @@ const GamePad = () => {
                 </span>
             </div>
             <section aria-label="Button feedback" className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900/70">
-                <div className="grid gap-2 xl:grid-cols-[7rem_minmax(0,1fr)]">
+                <div className="grid gap-2 xl:grid-cols-5">
                     <div className="text-slate-600 dark:text-slate-300">
                         <h3 className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">D-pad</h3>
-                        <DPadViz pressed={buttons.dpad} />
+                        <div className="flex justify-center">
+                            <DPadViz pressed={buttons.dpad} />
+                        </div>
                     </div>
-                    <div>
+                    <div className="xl:col-span-4">
                         <h3 className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">Face buttons</h3>
-                        <div className="flex flex-wrap items-center justify-around gap-1">
+                        <div className="grid grid-cols-2 items-center gap-1 sm:grid-cols-4">
                             <div className="flex flex-col items-center">
                                 <Cross height={72} width={72} fill="currentColor" className={indicatorClass(buttons.x)} role="img" aria-label={`Cross / A: ${buttons.x ? "pressed" : "released"}`} />
                                 <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Cross / A</span>
