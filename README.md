@@ -69,6 +69,62 @@ Keep the last successful deployment available for rollback. If a regression
 occurs, restore that deployment first, then revert the migration as a unit;
 do not depend on rebuilding with Node 20.
 
+### Animated DualSense model
+
+The 3D view uses `public/dualsense-animated.glb`, generated from the original
+`public/PS5 DualSense Controller.stl`. Run `npm run model:dualsense` to reproduce
+the asset. The script preserves every source triangle, separates the joined
+button covers and Create/Options caps, and assigns names and pivots to the controls. It checks the
+source SHA-256 before applying its model-specific extraction map.
+
+Connect a DualSense over USB or Bluetooth and press a button to expose it to the
+browser. Face buttons, D-pad directions, Create, Options, touchpad click, PS,
+L1/R1, L2/R2, and L3/R3 highlight and move independently. Sticks tilt with their
+axes; trigger travel follows analog pressure. Existing calibration settings
+apply. Drag to orbit and scroll/pinch to zoom.
+
+The browser must expose the standard Gamepad mapping. Touchpad click uses the
+DualSense extension at index 17. Touch coordinates, adaptive-trigger resistance,
+and the microphone mute button are not exposed by the standard Gamepad API;
+the mute mesh remains static. The OS may also intercept the PS button.
+
+For manual validation, test every button individually, D-pad diagonals, both
+sticks while clicking L3/R3, partial/full trigger pulls, simultaneous inputs,
+disconnect/reconnect, saved calibration, and mouse/touch camera controls.
+
+### Animated Xbox Elite model
+
+The Xbox view uses `public/xbox-elite-animated.gltf` and its `.bin`, generated
+with `npm run model:xbox` from `public/xbox_elite_controller/scene.gltf`.
+The source folder stays unchanged. The generated model references its original
+textures and retains every triangle, normal, tangent, UV, and material assignment
+while normalizing the pose and splitting the controls into named groups.
+Both source geometry files are hash-checked before generation.
+
+A/B/X/Y caps and lettering move together. View, Menu, Xbox, LB/RB, LT/RT,
+and both sticks respond independently, including analog trigger travel, stick
+tilt, and stick clicks. The single D-pad dish tilts with directional input and
+highlights only the pressed sectors, including diagonals. Existing calibration,
+reduced-motion preferences, and disconnect reset apply.
+
+The [standard browser mapping](https://www.w3.org/TR/gamepad/#remapping)
+does not assign separate indices to Elite paddles, the profile selector,
+pairing button, or trigger locks. Those parts remain static. A remapped paddle
+press highlights the standard button reported by the controller; it cannot be
+distinguished from pressing that button directly. The OS may intercept Xbox.
+
+The temporary preview button above the 3D view shows the other model while
+keeping the connected controller active. A DualSense can animate the Xbox model,
+and an Xbox controller can animate the PS5 model using the shared standard
+Gamepad mapping. Turn preview off to restore automatic model selection.
+
+Based on [Xbox Elite Controller](https://sketchfab.com/3d-models/xbox-elite-controller-32aad0ff25f7446b8afe649ea3cc9e43)
+by [Rusfort](https://sketchfab.com/Rusfort), licensed under
+[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+Modifications: separated controls, normalized pose/scale, animation pivots,
+and D-pad sectors. Original attribution is in
+`public/xbox_elite_controller/license.txt` and the generated GLTF metadata.
+
 <!-- CONTRIBUTING -->
 ## Contributing
 
