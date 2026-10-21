@@ -1,0 +1,11 @@
+Model Information:
+* title:	Xbox Elite Controller
+* source:	https://sketchfab.com/3d-models/xbox-elite-controller-32aad0ff25f7446b8afe649ea3cc9e43
+* author:	Rusfort (https://sketchfab.com/Rusfort)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Xbox Elite Controller" (https://sketchfab.com/3d-models/xbox-elite-controller-32aad0ff25f7446b8afe649ea3cc9e43) by Rusfort (https://sketchfab.com/Rusfort) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
