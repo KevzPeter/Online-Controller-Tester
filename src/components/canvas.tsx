@@ -44,7 +44,7 @@ const CanvasContainer = () => {
     const controllerType = previewOtherModel ? alternateModel : controller.connected ? controller.type : "dualsense";
 
     return (
-        <div className="relative basis-1/2 min-h-[420px] lg:min-h-[560px] border-2 rounded-2xl mx-4 overflow-hidden">
+        <div className="controller-stage relative basis-1/2 min-h-[420px] lg:min-h-[560px] border-2 rounded-2xl mx-4 overflow-hidden">
             <button
                 type="button"
                 aria-pressed={previewOtherModel}
@@ -57,7 +57,7 @@ const CanvasContainer = () => {
             </button>
             <ModelBoundary>
                 <Canvas style={{ minHeight: 420 }} dpr={[1, 2]} camera={{ position: [0, 2.1, 4.8] }}
-                    fallback={<p className="p-6">WebGL is unavailable. Use the button tester to check your controller.</p>}>
+                    fallback={<p className="p-6 text-slate-700 dark:text-slate-100">WebGL is unavailable. Use the button tester to check your controller.</p>}>
                     <SceneContainer controllerType={controllerType} acceptCrossModelInput={previewOtherModel} />
                 </Canvas>
                 <ModelLoadingStatus />
