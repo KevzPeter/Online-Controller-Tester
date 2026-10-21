@@ -87,7 +87,7 @@ const GamePad = () => {
     }, []);
 
     return (
-        <div className="basis-1/2 container flex min-w-0 flex-col mx-auto gap-y-3 text-slate-900 dark:text-slate-50">
+        <div className="flex w-full min-w-0 flex-col gap-y-3 text-slate-900 dark:text-slate-50">
             <ControllerAlert controllerName={controller.name} />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <AnalogStickViz label="Left Stick" x={calibratedX1} y={calibratedY1} />
