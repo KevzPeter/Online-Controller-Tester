@@ -28,9 +28,9 @@ const DPadViz = ({ pressed }: DPadVizProps) => {
 
     return (
         <svg
-            viewBox="0 0 512 512"
-            height={128}
-            width={128}
+            viewBox="60 60 392 392"
+            height={104}
+            width={104}
             role="img"
             aria-label={`D-pad: ${activeDirections.join(", ") || "no directions pressed"}`}
         >
@@ -39,7 +39,7 @@ const DPadViz = ({ pressed }: DPadVizProps) => {
                     key={name}
                     data-direction={name}
                     d={path}
-                    fill={pressed[name] ? "#0070f3" : "grey"}
+                    fill={pressed[name] ? "#0070f3" : "currentColor"}
                     className="transition-transform duration-75 ease-out motion-reduce:transition-none"
                     style={{
                         transformBox: "fill-box",
