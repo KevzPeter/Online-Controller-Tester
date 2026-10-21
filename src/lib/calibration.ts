@@ -24,12 +24,7 @@ export const DEFAULT_CALIBRATION_SETTINGS: CalibrationSettings = {
 
 const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
 
-export const loadCalibrationSettings = (): CalibrationSettings => {
-    if (typeof window === "undefined") {
-        return DEFAULT_CALIBRATION_SETTINGS;
-    }
-
-    const raw = window.localStorage.getItem(CALIBRATION_STORAGE_KEY);
+export const parseCalibrationSettings = (raw: string | null): CalibrationSettings => {
     if (!raw) {
         return DEFAULT_CALIBRATION_SETTINGS;
     }
@@ -44,6 +39,13 @@ export const loadCalibrationSettings = (): CalibrationSettings => {
     catch {
         return DEFAULT_CALIBRATION_SETTINGS;
     }
+};
+
+export const loadCalibrationSettings = (): CalibrationSettings => {
+    if (typeof window === "undefined") {
+        return DEFAULT_CALIBRATION_SETTINGS;
+    }
+    return parseCalibrationSettings(window.localStorage.getItem(CALIBRATION_STORAGE_KEY));
 };
 
 export const saveCalibrationSettings = (settings: CalibrationSettings) => {

@@ -1,25 +1,21 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Battery, BatteryCharging, Gauge } from "lucide-react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
 import ControllerAlert from "./controllerAlert";
 import AnalogStickViz from "./analogStickViz";
+import DPadViz from "./dPadViz";
 import { useGamepadState } from "@/hooks/useGamepadState";
+import { useCalibrationSettings } from "@/hooks/useCalibrationSettings";
 import {
     applyAxisCalibration,
     DEFAULT_CALIBRATION_SETTINGS,
-    loadCalibrationSettings,
     saveCalibrationSettings,
     type CalibrationSettings,
 } from "@/lib/calibration";
-import DPad from "../../public/assets/Buttons Outline/Black/SVG/D-Pad.svg";
-import DPadUp from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Up.svg";
-import DPadDown from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Down.svg";
-import DPadLeft from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Left.svg";
-import DPadRight from "../../public/assets/Buttons Outline/Black/SVG/D-Pad Right.svg";
 import Square from "../../public/assets/Buttons Outline/Black/SVG/Square.svg";
 import Circle from "../../public/assets/Buttons Outline/Black/SVG/Circle.svg";
 import Triangle from "../../public/assets/Buttons Outline/Black/SVG/Triangle.svg";
@@ -40,7 +36,7 @@ const GamePad = () => {
     const gamepadState = useGamepadState();
 
     // Local state for UI concerns
-    const [calibration, setCalibration] = useState<CalibrationSettings>(DEFAULT_CALIBRATION_SETTINGS);
+    const calibration = useCalibrationSettings();
     const [hapticsMessage, setHapticsMessage] = useState("");
 
     // Destructure for cleaner template access
@@ -76,16 +72,12 @@ const GamePad = () => {
         key: K,
         value: CalibrationSettings[K]
     ) => {
-        setCalibration((prev) => {
-            const next = { ...prev, [key]: value };
-            saveCalibrationSettings(next);
-            window.dispatchEvent(new CustomEvent("controller-calibration-changed", { detail: next }));
-            return next;
-        });
+        const next = { ...calibration, [key]: value };
+        saveCalibrationSettings(next);
+        window.dispatchEvent(new CustomEvent("controller-calibration-changed", { detail: next }));
     };
 
     const resetCalibration = useCallback(() => {
-        setCalibration(DEFAULT_CALIBRATION_SETTINGS);
         saveCalibrationSettings(DEFAULT_CALIBRATION_SETTINGS);
         window.dispatchEvent(
             new CustomEvent("controller-calibration-changed", { detail: DEFAULT_CALIBRATION_SETTINGS })
@@ -102,7 +94,7 @@ const GamePad = () => {
             const gamepad = navigator.getGamepads().find((gp) => gp?.id === controller.name);
             if (!gamepad) throw new Error("Controller not found");
 
-            const gamepadWithHaptics = gamepad as Gamepad & {
+            const gamepadWithHaptics = gamepad as Omit<Gamepad, "vibrationActuator" | "hapticActuators"> & {
                 vibrationActuator?: {
                     playEffect?: (
                         type: string,
@@ -114,7 +106,7 @@ const GamePad = () => {
                         }
                     ) => Promise<unknown>;
                 };
-                hapticActuators?: Array<{
+                hapticActuators?: ReadonlyArray<{
                     pulse?: (value: number, duration: number) => Promise<boolean>;
                 }>;
             };
@@ -141,11 +133,6 @@ const GamePad = () => {
             setHapticsMessage("Vibration test failed.");
         }
     }, [controller.connected, controller.name]);
-
-    useEffect(() => {
-        const storedCalibration = loadCalibrationSettings();
-        setCalibration(storedCalibration);
-    }, []);
 
     return (
         <div className="basis-1/2 container flex flex-col mx-auto gap-y-4 text-slate-900 dark:text-slate-50">
@@ -209,11 +196,7 @@ const GamePad = () => {
                 </div>
             </div>
             <div className="flex items-center gap-x-4">
-                {buttons.dpad.up && <DPadUp height={128} width={128} fill={"#0070f3"} />}
-                {buttons.dpad.down && <DPadDown height={128} width={128} fill={"#0070f3"} />}
-                {buttons.dpad.left && <DPadLeft height={128} width={128} fill={"#0070f3"} />}
-                {buttons.dpad.right && <DPadRight height={128} width={128} fill={"#0070f3"} />}
-                {(!buttons.dpad.up && !buttons.dpad.down && !buttons.dpad.left && !buttons.dpad.right) && <DPad height={128} width={128} fill="grey" />}
+                <DPadViz pressed={buttons.dpad} />
                 <Cross height={buttons.x ? 60 : 64} width={64} fill={buttons.x ? "#0070f3" : "grey"} />
                 <Circle height={buttons.circle ? 60 : 64} width={64} fill={buttons.circle ? "#0070f3" : "grey"} />
                 <Square height={buttons.square ? 60 : 64} width={64} fill={buttons.square ? "#0070f3" : "grey"} />
@@ -228,13 +211,16 @@ const GamePad = () => {
                 <R3 height={buttons.r3 ? 60 : 64} width={64} fill={buttons.r3 ? "#0070f3" : "grey"} />
             </div>
             <div className="flex gap-x-4">
-                <Create height={buttons.create ? 60 : 64} width={64} fill={buttons.create ? "#0070f3" : "grey"} />
-                <Options height={buttons.options ? 60 : 64} width={64} fill={buttons.options ? "#0070f3" : "grey"} />
-                <TouchPad height={buttons.touchpad ? 60 : 64} width={64} fill={buttons.touchpad ? "#0070f3" : "grey"} />
+                <Create height={buttons.create ? 60 : 64} width={64} fill="currentColor" color={buttons.create ? "#0070f3" : "grey"} />
+                <Options height={buttons.options ? 60 : 64} width={64} fill="currentColor" color={buttons.options ? "#0070f3" : "grey"} />
+                <TouchPad height={buttons.touchpad ? 60 : 64} width={64} fill="currentColor" color={buttons.touchpad ? "#0070f3" : "grey"} />
                 <Home height={buttons.power ? 60 : 64} width={64} fill={buttons.power ? "#0070f3" : "grey"} />
             </div>
-            <span className="mt-4"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> Use Right Analog to move camera.</span>
-            <span className="mt-2"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> Use L2/R2 to zoom.</span>
+            <span className="mt-4"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> Drag the 3D model to rotate. Scroll or pinch to zoom.</span>
+            <span className="mt-2"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> DualSense and Xbox sticks and buttons animate on the model. System buttons depend on browser and OS support.</span>
+            {controller.type === "xbox" && (
+                <span className="mt-2 text-sm">Elite paddles animate their assigned button. Paddle, profile, sync, and trigger-lock inputs are not separately mapped by the standard browser Gamepad API.</span>
+            )}
         </div>
     )
 }

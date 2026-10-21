@@ -1,20 +1,20 @@
-import PS5Controller from "../../public/Dualsense";
-import XboxController from "../../public/Xbox-controller";
+import PS5Controller from "./dualsenseController";
+import XboxController from "./xboxController";
 
 type RenderControllerProps = {
     controllerType: string;
-    scaleFactor: number;
+    acceptCrossModelInput?: boolean;
 };
 
 const RenderController = (props: RenderControllerProps) => {
     if (props.controllerType === 'xbox') {
         return (
-            <XboxController scaleFactor={props.scaleFactor} />
+            <XboxController acceptDualSenseInput={props.acceptCrossModelInput} />
         )
     }
     else if (props.controllerType === 'dualsense') {
         return (
-            <PS5Controller scaleFactor={props.scaleFactor} />
+            <PS5Controller acceptXboxInput={props.acceptCrossModelInput} />
         )
     }
     else return null;
