@@ -18,13 +18,10 @@ const AnalogStickViz = ({ label, x, y }: AnalogStickVizProps) => {
     const dotY = center + safeY * radius;
 
     return (
-        <div className="w-full rounded-xl border border-slate-200/80 bg-slate-100/80 p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900">
-            <div className="mb-2 flex flex-wrap items-center justify-between gap-1">
-                <h3 className="text-sm font-semibold tracking-wide text-slate-700 dark:text-slate-200">{label}</h3>
-                <span className="text-sm tabular-nums text-slate-600 dark:text-slate-200">X: {formatAxisValue(safeX)} | Y: {formatAxisValue(safeY)}</span>
-            </div>
+        <div className="min-w-0 text-center">
+            <h3 className="mb-3 text-xs font-medium text-slate-600 dark:text-slate-300">{label}</h3>
 
-            <div className="relative mx-auto aspect-square w-full max-w-[180px]">
+            <div className="relative mx-auto aspect-square w-full max-w-[150px]">
                 <svg viewBox="0 0 200 200" className="h-full w-full">
                     <circle cx={center} cy={center} r={radius} className="fill-slate-200 dark:fill-slate-800" />
                     <circle cx={center} cy={center} r={radius} fill="none" className="stroke-slate-500 dark:stroke-slate-400" strokeWidth="2" strokeOpacity="0.7" />
@@ -32,8 +29,8 @@ const AnalogStickViz = ({ label, x, y }: AnalogStickVizProps) => {
                     <line x1={center - radius} y1={center} x2={center + radius} y2={center} className="stroke-slate-400 dark:stroke-slate-500" strokeWidth="1.5" strokeDasharray="5 5" />
 
                     <circle cx={center} cy={center} r="4" className="fill-slate-600 dark:fill-slate-300" />
-                    <circle cx={dotX} cy={dotY} r={dotRadius} className="fill-blue-600 transition-all duration-75 ease-linear" />
-                    <circle cx={dotX} cy={dotY} r={dotRadius + 6} className="fill-blue-500/25 transition-all duration-75 ease-linear" />
+                    <circle cx={dotX} cy={dotY} r={dotRadius} className="fill-blue-600 transition-all duration-75 ease-linear motion-reduce:transition-none" />
+                    <circle cx={dotX} cy={dotY} r={dotRadius + 6} className="fill-blue-500/25 transition-all duration-75 ease-linear motion-reduce:transition-none" />
                 </svg>
 
                 <span className="pointer-events-none absolute left-1/2 top-0 -translate-x-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400">-1</span>
@@ -41,6 +38,10 @@ const AnalogStickViz = ({ label, x, y }: AnalogStickVizProps) => {
                 <span className="pointer-events-none absolute left-0 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400">-1</span>
                 <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 text-[10px] font-medium text-slate-500 dark:text-slate-400">1</span>
             </div>
+            <p className="mt-3 flex flex-wrap justify-center gap-x-3 font-mono text-[11px] tabular-nums text-slate-500 dark:text-slate-400">
+                <span>X <span className="text-slate-800 dark:text-slate-200">{formatAxisValue(safeX)}</span></span>
+                <span>Y <span className="text-slate-800 dark:text-slate-200">{formatAxisValue(safeY)}</span></span>
+            </p>
         </div>
     );
 };

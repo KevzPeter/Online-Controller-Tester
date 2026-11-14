@@ -4,14 +4,14 @@ const Footer = () => {
     const currentYear = (new Date).getFullYear();
 
     return (
-        <footer className="px-8 py-4 flex justify-between align-bottom bg-slate-200 m-0 gap-4 text-slate-900 dark:bg-slate-800 dark:text-slate-100">
-            <span className="text-md font-medium">© {currentYear} Kevin Peter</span>
+        <footer className="m-0 flex flex-col items-center justify-between gap-3 border-t border-slate-200 px-4 py-5 text-xs text-slate-500 sm:flex-row sm:px-6 dark:border-slate-800 dark:text-slate-400">
+            <span>© {currentYear} Kevin Peter</span>
             <span className="flex gap-4">
-                <a href="https://github.com/KevzPeter/Online-Controller-Tester" target="_blank" rel="no-referrer" className="text-md font-medium">
-                    <span className="flex gap-2"><GitHubLogoIcon className="h-5 w-5" /> Github</span>
+                <a href="https://github.com/KevzPeter/Online-Controller-Tester" target="_blank" rel="noreferrer" className="font-medium hover:text-slate-900 dark:hover:text-slate-100">
+                    <span className="flex items-center gap-1.5"><GitHubLogoIcon className="h-4 w-4" /> GitHub</span>
                 </a>
-                <a href="https://kevzpeter.com" target="_blank" rel="no-referrer" className="text-md font-medium">
-                    <span className="flex gap-2"><GlobeIcon className="h-5 w-5" /> KevzPeter</span>
+                <a href="https://kevzpeter.com" target="_blank" rel="noreferrer" className="font-medium hover:text-slate-900 dark:hover:text-slate-100">
+                    <span className="flex items-center gap-1.5"><GlobeIcon className="h-4 w-4" /> KevzPeter</span>
                 </a>
             </span>
         </footer>

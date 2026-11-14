@@ -1,9 +1,7 @@
 import { Quaternion, Vector3 } from "three";
-import type { DualSenseReport, Vector3 as SensorVector } from "@/lib/dualsenseHidProtocol";
+import type { DualSenseReport } from "@/lib/dualsenseHidProtocol";
 
-// PlayStation motion uses X right, Y out of the face, Z toward the grips.
-// The rendered controller uses X right, Y toward the shoulder buttons, Z out of the face.
-const toModelAxes = ({ x, y, z }: SensorVector) => new Vector3(x, -z, y);
+// Face-up HID acceleration is -Z; the neutral model pose faces the viewer.
 const levelGravity = new Vector3(0, 0, -1);
 
 export class DualSenseOrientation {
@@ -27,7 +25,8 @@ export class DualSenseOrientation {
     }
 
     update(report: Pick<DualSenseReport, "gyro" | "accel">, timestamp: number) {
-        const acceleration = toModelAxes(report.accel);
+        const { accel, gyro } = report;
+        const acceleration = new Vector3(accel.x, accel.y, accel.z);
         const magnitude = acceleration.length();
         const gravityValid = magnitude > 0.75 && magnitude < 1.25;
         if (gravityValid) {
@@ -43,7 +42,8 @@ export class DualSenseOrientation {
         this.lastTime = timestamp;
         if (!this.initialized || !delta) return;
 
-        const angularVelocity = toModelAxes(report.gyro);
+        // Gyro pitch/yaw/roll map to model X/Z/-Y; acceleration stays in XYZ.
+        const angularVelocity = new Vector3(gyro.x, -gyro.z, gyro.y);
         const speed = angularVelocity.length();
         if (speed > 0.08) {
             const step = new Quaternion().setFromAxisAngle(

@@ -14,6 +14,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Online Controller Tester",
   description: "Test your Playstation DualSense or Xbox Controllers using this interactive 3D visualization!",
+  icons: {
+    icon: { url: "/logo.svg", type: "image/svg+xml", sizes: "any" },
+    apple: { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
+  },
 };
 
 export default function RootLayout({
