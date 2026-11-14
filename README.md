@@ -1,9 +1,8 @@
-<a username="readme-top"></a>
-<!-- PROJECT LOGO -->
+﻿<a id="readme-top"></a>
 <br />
 <div align="center">
   <a href="https://github.com/KevzPeter/Online-Controller-Tester">
-    <img src="media/PS5-Controller.png" alt="Logo" width="80" height="60">
+    <img src="media/PS5-Controller.png" alt="DualSense controller" width="80" height="60">
   </a>
 
   <h3 align="center">Online Controller Tester</h3>
@@ -11,153 +10,62 @@
   <p align="center"><a href="docs/dualsense-webhid.md">DualSense WebHID setup &amp; motion tracking</a></p>
 
   <p align="center">
-    🎮 Test your Playstation DualSense or Xbox Controllers using this interactive 3D visualization!
+    🎮 Plug in a DualSense or Xbox controller and see what every press is doing.
     <br />
     <br />
     <a href="https://online-controller-tester.vercel.app/">✨ View Demo</a>
     ·
-    <a href="https://github.com/KevzPeter/online-controller-tester/issues">🐛 Report Bug</a>
+    <a href="https://github.com/KevzPeter/Online-Controller-Tester/issues/new">🐛 Report Bug</a>
     ·
-    <a href="https://github.com/KevzPeter/online-controller-tester/issues">💁🏽 Request Feature</a>
+    <a href="https://github.com/KevzPeter/Online-Controller-Tester/issues/new">💁🏽 Request Feature</a>
   </p>
 </div>
 
-
-<!-- DEMO -->
 ## Demo
 
 <div align="center">
-<img  src="media/demo_new.png" alt="Screenshot" width="800" height="374">
+  <img src="media/demo_new.png" alt="Online Controller Tester showing live DualSense input" width="800">
+  <br />
+  <sub>Screenshot from an earlier build. The tester now has animated DualSense and Xbox models.</sub>
 </div>
 
-<!-- ENHANCEMENTS -->
-## Planned Enhancements
+## What's working
 
-- [x] Support for Xbox Controllers
-- [x] Add 3D Xbox Controller model
-- [ ] Make 3D model interactive 
-    - [ ] Highlight active buttons
-    - [ ] Movable analog sticks
+- [x] Live feedback for buttons, D-pad, sticks, and triggers
+- [x] Animated 3D DualSense and Xbox Elite models
+- [x] One D-pad that lights up every direction you press, even diagonals
+- [x] Deadzone and sensitivity controls that remember your settings
+- [x] A temporary model switch: use your PS5 controller on the Xbox model, or your Xbox controller on the PS5 model
 
-## Development
+The matching model loads automatically when your controller connects. Drag the model to look around, and scroll or pinch to zoom.
 
-Use Node.js 24.x and npm. With nvm, run `nvm install 24` and `nvm use 24`
-(or `nvm install` and `nvm use` with nvm-sh).
+## Try it locally
+
+You'll need Node.js 24.x, npm, and a browser that supports WebGL and the Gamepad API. No controller? You can still look at both models with the preview switch.
 
 ```sh
+git clone https://github.com/KevzPeter/Online-Controller-Tester.git
+cd Online-Controller-Tester
 npm ci
 npm run dev
 ```
 
-Open http://localhost:3000. Development and production builds use Webpack to
-preserve the SVG component loader. The app uses Next.js 16 and React 19.
+Open [http://localhost:3000](http://localhost:3000), connect a controller by USB or Bluetooth, and press a button so the browser picks it up. Try the D-pad diagonals, click both sticks, and pull the triggers partway to see their travel. Use **Reset Defaults** if you want to undo calibration changes.
 
-Before opening a pull request, run `npm run check`, which runs:
+## Good to know
 
-- `npm run lint`: ESLint with Next.js core web vitals rules.
-- `npm run typecheck`: Generate Next.js declarations, then check TypeScript without JavaScript output.
-- `npm run build`: Production build, including downloading the Google font.
+The browser's Gamepad mapping doesn't expose every controller feature. DualSense touchpad *click* works when the browser reports button 17, but touch coordinates, adaptive-trigger resistance, and the mute button aren't available here. Xbox Elite paddles activate whichever standard button they're mapped to; the browser doesn't give them separate inputs. Your operating system may intercept the PS or Xbox button.
 
-GitHub Actions runs these checks on pushes and pull requests under Node.js 24.
-Use `npm start` to serve a completed production build. Controller hardware and
-browser behavior are not covered by these checks.
+## Building and contributing
 
-### Vercel deployment
+Run `npm run check` before a pull request. It runs ESLint, TypeScript checks, and a production build. `npm run build` followed by `npm start` serves that build locally.
 
-Set the project's Node.js version to `24.x`; `package.json` also declares this
-runtime. Vercel manages the Node 24 minor and patch version. Validate a preview
-build and confirm Node 24 in its build logs before promoting to production.
-Keep the last successful deployment available for rollback. If a regression
-occurs, restore that deployment first, then revert the migration as a unit;
-do not depend on rebuilding with Node 20.
+The model files can be rebuilt with `npm run model:dualsense` and `npm run model:xbox`. Their scripts check the source assets before making the animated versions. If you change input or 3D behavior, please test both controller families, disconnect/reconnect, simultaneous presses, and calibration after a reload. See [AGENTS.md](AGENTS.md) for more repository details.
 
-### Animated DualSense model
+If you'd like to improve the tester, fork it, make a focused branch, and open a pull request. Include what changed, how you tested it, and a screenshot or short recording for visual changes. Ideas and bug reports are welcome in [Issues](https://github.com/KevzPeter/Online-Controller-Tester/issues). And if the tester helped you, give it a star. Thanks!
 
-The 3D view uses `public/dualsense-animated.glb`, generated from the original
-`public/PS5 DualSense Controller.stl`. Run `npm run model:dualsense` to reproduce
-the asset. The script preserves every source triangle, separates the joined
-button covers and Create/Options caps, and assigns names and pivots to the controls. It checks the
-source SHA-256 before applying its model-specific extraction map.
+## Model credit
 
-Connect a DualSense over USB or Bluetooth and press a button to expose it to the
-browser. Face buttons, D-pad directions, Create, Options, touchpad click, PS,
-L1/R1, L2/R2, and L3/R3 highlight and move independently. Sticks tilt with their
-axes; trigger travel follows analog pressure. Existing calibration settings
-apply. Drag to orbit and scroll/pinch to zoom.
-
-The browser must expose the standard Gamepad mapping. Touchpad click uses the
-DualSense extension at index 17. Touch coordinates, adaptive-trigger resistance,
-and the microphone mute button are not exposed by the standard Gamepad API;
-the mute mesh remains static. The OS may also intercept the PS button.
-
-For manual validation, test every button individually, D-pad diagonals, both
-sticks while clicking L3/R3, partial/full trigger pulls, simultaneous inputs,
-disconnect/reconnect, saved calibration, and mouse/touch camera controls.
-
-### Animated Xbox Elite model
-
-The Xbox view uses `public/xbox-elite-animated.gltf` and its `.bin`, generated
-with `npm run model:xbox` from `public/xbox_elite_controller/scene.gltf`.
-The source folder stays unchanged. The generated model references its original
-textures and retains every triangle, normal, tangent, UV, and material assignment
-while normalizing the pose and splitting the controls into named groups.
-Both source geometry files are hash-checked before generation.
-
-A/B/X/Y caps and lettering move together. View, Menu, Xbox, LB/RB, LT/RT,
-and both sticks respond independently, including analog trigger travel, stick
-tilt, and stick clicks. The single D-pad dish tilts with directional input and
-highlights only the pressed sectors, including diagonals. Existing calibration,
-reduced-motion preferences, and disconnect reset apply.
-
-The [standard browser mapping](https://www.w3.org/TR/gamepad/#remapping)
-does not assign separate indices to Elite paddles, the profile selector,
-pairing button, or trigger locks. Those parts remain static. A remapped paddle
-press highlights the standard button reported by the controller; it cannot be
-distinguished from pressing that button directly. The OS may intercept Xbox.
-
-The temporary preview button above the 3D view shows the other model while
-keeping the connected controller active. A DualSense can animate the Xbox model,
-and an Xbox controller can animate the PS5 model using the shared standard
-Gamepad mapping. Turn preview off to restore automatic model selection.
-
-Based on [Xbox Elite Controller](https://sketchfab.com/3d-models/xbox-elite-controller-32aad0ff25f7446b8afe649ea3cc9e43)
-by [Rusfort](https://sketchfab.com/Rusfort), licensed under
-[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-Modifications: separated controls, normalized pose/scale, animation pivots,
-and D-pad sectors. Original attribution is in
-`public/xbox_elite_controller/license.txt` and the generated GLTF metadata.
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-If you'd like to add enhancements, please fork the repo and create a pull request. You can also open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+The Xbox Elite model is based on [Xbox Elite Controller](https://sketchfab.com/3d-models/xbox-elite-controller-32aad0ff25f7446b8afe649ea3cc9e43) by [Rusfort](https://sketchfab.com/Rusfort), licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). I separated controls and added animation pivots and D-pad sectors. The [original attribution](public/xbox_elite_controller/license.txt) is included with the asset.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Docker]: https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white
-[Docker-url]: https://docker.com/
