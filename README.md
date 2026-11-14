@@ -22,9 +22,9 @@
 ## Demo
 
 <div align="center">
-  <img src="media/demo_new.png" alt="Online Controller Tester showing live DualSense input" width="800">
+  <img src="media/dualsense-webhid-telemetry.png" alt="Current Online Controller Tester UI showing the animated DualSense model, calibration controls, button feedback, and WebHID telemetry" width="1000">
   <br />
-  <sub>Screenshot from an earlier build. The tester now has animated DualSense and Xbox models.</sub>
+  <sub>Current UI in dark mode with simulated DualSense WebHID input.</sub>
 </div>
 
 ## What's working
