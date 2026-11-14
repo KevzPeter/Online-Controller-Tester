@@ -1,3 +1,5 @@
+import { getDualSenseHidGamepad } from "@/lib/dualsenseHid";
+
 export type ControllerType = "" | "xbox" | "dualsense";
 
 export function detectControllerType(id: string): ControllerType {
@@ -10,11 +12,14 @@ export function detectControllerType(id: string): ControllerType {
 
 // Use the same pad in both views; browsers can leave empty slots after unplugging.
 export function getActiveGamepad(): Gamepad | null {
-    if (typeof navigator === "undefined" || !navigator.getGamepads) return null;
+    if (typeof navigator === "undefined") return null;
     try {
-        return Array.from(navigator.getGamepads()).find((pad) => pad?.connected) ?? null;
+        const native = navigator.getGamepads
+            ? Array.from(navigator.getGamepads()).find((pad) => pad?.connected) ?? null : null;
+        if (native && detectControllerType(native.id) !== "dualsense") return native;
+        return getDualSenseHidGamepad() ?? native;
     } catch {
         // Gamepad access can be denied by an embedding page's permissions policy.
-        return null;
+        return getDualSenseHidGamepad();
     }
 }

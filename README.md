@@ -22,9 +22,9 @@
 ## Demo
 
 <div align="center">
-  <img src="media/demo_new.png" alt="Online Controller Tester showing live DualSense input" width="800">
+  <img src="media/dualsense-webhid-telemetry.png" alt="Current Online Controller Tester UI showing the animated DualSense model, calibration controls, button feedback, and WebHID telemetry" width="1000">
   <br />
-  <sub>Screenshot from an earlier build. The tester now has animated DualSense and Xbox models.</sub>
+  <sub>Current UI in dark mode with simulated DualSense WebHID input.</sub>
 </div>
 
 ## What's working
@@ -34,6 +34,7 @@
 - [x] One D-pad that lights up every direction you press, even diagonals
 - [x] Deadzone and sensitivity controls that remember your settings
 - [x] A temporary model switch: use your PS5 controller on the Xbox model, or your Xbox controller on the PS5 model
+- [x] Optional DualSense battery, charging, and motion tracking through WebHID
 
 The matching model loads automatically when your controller connects. Drag the model to look around, and scroll or pinch to zoom.
 
@@ -54,9 +55,11 @@ Open [http://localhost:3000](http://localhost:3000), connect a controller by USB
 
 The browser's Gamepad mapping doesn't expose every controller feature. DualSense touchpad *click* works when the browser reports button 17, but touch coordinates, adaptive-trigger resistance, and the mute button aren't available here. Xbox Elite paddles activate whichever standard button they're mapped to; the browser doesn't give them separate inputs. Your operating system may intercept the PS or Xbox button.
 
+For battery and motion, desktop Chrome or Edge can connect to DualSense WebHID on HTTPS or localhost. See the [WebHID setup and motion guide](docs/dualsense-webhid.md) for permissions, USB/Bluetooth limitations, relative heading, and hardware checks.
+
 ## Building and contributing
 
-Run `npm run check` before a pull request. It runs ESLint, TypeScript checks, and a production build. `npm run build` followed by `npm start` serves that build locally.
+Run `npm run check` before a pull request. It runs ESLint, TypeScript checks, `npm test` (HID parsing, motion, input selection, and connection lifecycle), and a production build. `npm run build` followed by `npm start` serves that build locally.
 
 The model files can be rebuilt with `npm run model:dualsense` and `npm run model:xbox`. Their scripts check the source assets before making the animated versions. If you change input or 3D behavior, please test both controller families, disconnect/reconnect, simultaneous presses, and calibration after a reload. See [AGENTS.md](AGENTS.md) for more repository details.
 

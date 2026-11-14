@@ -1,12 +1,12 @@
 "use client";
 
 import { useCallback } from "react";
-import { Battery, BatteryCharging, Gauge } from "lucide-react";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
 import ControllerAlert from "./controllerAlert";
 import AnalogStickViz from "./analogStickViz";
 import DPadViz from "./dPadViz";
+import ControllerTelemetry from "./controllerTelemetry";
 import { useGamepadState } from "@/hooks/useGamepadState";
 import { useCalibrationSettings } from "@/hooks/useCalibrationSettings";
 import {
@@ -122,18 +122,7 @@ const GamePad = () => {
                     </div>
                 </div>
             </details>
-            <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
-                <span className="inline-flex items-center gap-1.5">
-                    {telemetry.batteryCharging ? <BatteryCharging size={16} /> : <Battery size={16} />}
-                    <span>
-                        Battery: {telemetry.batteryLevel !== null ? `${Math.round(telemetry.batteryLevel * 100)}%${telemetry.batteryCharging === true ? " (Charging)" : ""}` : "Unavailable"}
-                    </span>
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                    <Gauge size={16} />
-                    <span>Polling: {telemetry.pollingRate ? `${telemetry.pollingRate.toFixed(0)} Hz` : "--"}</span>
-                </span>
-            </div>
+            <ControllerTelemetry controller={controller} telemetry={telemetry} />
             <section aria-label="Button feedback" className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900/70">
                 <div className="grid gap-2 xl:grid-cols-5">
                     <div className="text-slate-600 dark:text-slate-300">

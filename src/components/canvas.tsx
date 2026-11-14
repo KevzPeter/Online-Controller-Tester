@@ -4,6 +4,8 @@ import SceneContainer from "./scene";
 import { Component, useState, type ReactNode } from "react";
 import { useProgress } from "@react-three/drei";
 import { useGamepadState } from "@/hooks/useGamepadState";
+import { useDualSenseHid } from "@/hooks/useDualSenseHid";
+import { dualSenseOrientation } from "@/lib/dualsenseOrientation";
 
 function ModelLoadingStatus() {
     const { active } = useProgress();
@@ -39,26 +41,37 @@ class ModelBoundary extends Component<{ children: ReactNode }, { failed: boolean
 
 const CanvasContainer = () => {
     const { controller } = useGamepadState();
+    const hid = useDualSenseHid();
     const [previewOtherModel, setPreviewOtherModel] = useState(false);
     const alternateModel = controller.type === "xbox" ? "dualsense" : "xbox";
     const controllerType = previewOtherModel ? alternateModel : controller.connected ? controller.type : "dualsense";
+    const trackMotion = Boolean(hid.connected && hid.report && controller.connected && controller.type === "dualsense");
 
     return (
         <div className="controller-stage relative h-[420px] w-full min-w-0 overflow-hidden rounded-2xl border-2 sm:h-[560px] lg:h-[clamp(560px,70vh,760px)]">
-            <button
-                type="button"
-                aria-pressed={previewOtherModel}
-                onClick={() => setPreviewOtherModel((current) => !current)}
-                className={`absolute right-3 top-3 z-10 rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${previewOtherModel
-                    ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
-                    : "border-slate-300 bg-white/90 text-slate-800 hover:bg-white dark:border-slate-600 dark:bg-slate-900/90 dark:text-slate-100 dark:hover:bg-slate-900"}`}
-            >
-                Preview {alternateModel === "xbox" ? "Xbox" : "PS5"} model
-            </button>
+            <div className="absolute right-3 top-3 z-10 flex flex-wrap justify-end gap-2">
+                {trackMotion && (
+                    <button type="button" onClick={() => dualSenseOrientation.recenterHeading()}
+                        title="Reset the relative heading if it drifts"
+                        className="rounded-lg border border-slate-300 bg-white/90 px-3 py-2 text-sm font-medium text-slate-800 shadow-sm hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-600 dark:bg-slate-900/90 dark:text-slate-100 dark:hover:bg-slate-900">
+                        Reset heading
+                    </button>
+                )}
+                <button
+                    type="button"
+                    aria-pressed={previewOtherModel}
+                    onClick={() => setPreviewOtherModel((current) => !current)}
+                    className={`rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${previewOtherModel
+                        ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
+                        : "border-slate-300 bg-white/90 text-slate-800 hover:bg-white dark:border-slate-600 dark:bg-slate-900/90 dark:text-slate-100 dark:hover:bg-slate-900"}`}
+                >
+                    Preview {alternateModel === "xbox" ? "Xbox" : "PS5"} model
+                </button>
+            </div>
             <ModelBoundary>
                 <Canvas dpr={[1, 2]} camera={{ position: [0, 2.1, 4.8] }}
                     fallback={<p className="p-6 text-slate-700 dark:text-slate-100">WebGL is unavailable. Use the button tester to check your controller.</p>}>
-                    <SceneContainer controllerType={controllerType} acceptCrossModelInput={previewOtherModel} />
+                    <SceneContainer controllerType={controllerType} acceptCrossModelInput={previewOtherModel} trackMotion={trackMotion} />
                 </Canvas>
                 <ModelLoadingStatus />
             </ModelBoundary>
