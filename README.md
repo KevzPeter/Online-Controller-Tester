@@ -8,6 +8,8 @@
 
   <h3 align="center">Online Controller Tester</h3>
 
+  <p align="center"><a href="docs/dualsense-webhid.md">DualSense WebHID setup &amp; motion tracking</a></p>
+
   <p align="center">
     🎮 Test your Playstation DualSense or Xbox Controllers using this interactive 3D visualization!
     <br />
