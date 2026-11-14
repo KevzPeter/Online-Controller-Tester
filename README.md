@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/KevzPeter/Online-Controller-Tester">
-    <img src="media/PS5-Controller.png" alt="DualSense controller" width="80" height="60">
+    <img src="public/logo.svg" alt="Online Controller Tester logo" width="72" height="72">
   </a>
 
   <h3 align="center">Online Controller Tester</h3>

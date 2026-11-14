@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import SceneContainer from "./scene";
 import { Component, useState, type ReactNode } from "react";
 import { useProgress } from "@react-three/drei";
+import { RotateCcw } from "lucide-react";
 import { useGamepadState } from "@/hooks/useGamepadState";
 import { useDualSenseHid } from "@/hooks/useDualSenseHid";
 import { dualSenseOrientation } from "@/lib/dualsenseOrientation";
@@ -48,25 +49,32 @@ const CanvasContainer = () => {
     const trackMotion = Boolean(hid.connected && hid.report && controller.connected && controller.type === "dualsense");
 
     return (
-        <div className="controller-stage relative h-[420px] w-full min-w-0 overflow-hidden rounded-2xl border-2 sm:h-[560px] lg:h-[clamp(560px,70vh,760px)]">
+        <div className="controller-stage relative h-[360px] w-full min-w-0 overflow-hidden rounded-2xl border border-slate-200 sm:h-[460px] lg:h-[560px] dark:border-slate-700/70">
             <div className="absolute right-3 top-3 z-10 flex flex-wrap justify-end gap-2">
                 {trackMotion && (
                     <button type="button" onClick={() => dualSenseOrientation.recenterHeading()}
+                        aria-label="Reset heading"
                         title="Reset the relative heading if it drifts"
-                        className="rounded-lg border border-slate-300 bg-white/90 px-3 py-2 text-sm font-medium text-slate-800 shadow-sm hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-600 dark:bg-slate-900/90 dark:text-slate-100 dark:hover:bg-slate-900">
-                        Reset heading
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/50 bg-white/80 text-slate-700 shadow-sm backdrop-blur hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 dark:border-slate-600/50 dark:bg-slate-900/70 dark:text-slate-200 dark:hover:bg-slate-900">
+                        <RotateCcw size={16} aria-hidden="true" />
                     </button>
                 )}
-                <button
-                    type="button"
-                    aria-pressed={previewOtherModel}
-                    onClick={() => setPreviewOtherModel((current) => !current)}
-                    className={`rounded-lg border px-3 py-2 text-sm font-medium shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${previewOtherModel
-                        ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700"
-                        : "border-slate-300 bg-white/90 text-slate-800 hover:bg-white dark:border-slate-600 dark:bg-slate-900/90 dark:text-slate-100 dark:hover:bg-slate-900"}`}
-                >
-                    Preview {alternateModel === "xbox" ? "Xbox" : "PS5"} model
-                </button>
+                <label htmlFor="model-preview" className="inline-flex h-9 cursor-pointer items-center gap-2.5 rounded-lg border border-white/50 bg-white/80 px-3 text-xs font-medium text-slate-700 shadow-sm backdrop-blur dark:border-slate-600/50 dark:bg-slate-900/70 dark:text-slate-200">
+                    <span>{alternateModel === "xbox" ? "Xbox" : "PS5"} model</span>
+                    <button
+                        id="model-preview"
+                        type="button"
+                        role="switch"
+                        aria-label={`Preview ${alternateModel === "xbox" ? "Xbox" : "PS5"} model`}
+                        title={`Preview ${alternateModel === "xbox" ? "Xbox" : "PS5"} model`}
+                        aria-checked={previewOtherModel}
+                        onClick={() => setPreviewOtherModel((current) => !current)}
+                        className={`relative h-6 w-10 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 motion-reduce:transition-none ${previewOtherModel
+                            ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-600"}`}
+                    >
+                        <span aria-hidden="true" className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform motion-reduce:transition-none ${previewOtherModel ? "translate-x-4" : "translate-x-0"}`} />
+                    </button>
+                </label>
             </div>
             <ModelBoundary>
                 <Canvas dpr={[1, 2]} camera={{ position: [0, 2.1, 4.8] }}
@@ -76,10 +84,10 @@ const CanvasContainer = () => {
                 <ModelLoadingStatus />
             </ModelBoundary>
             {/* Keep HTML in the page's React root, outside the WebGL scene. */}
-            {(!previewOtherModel && (!controller.connected || !controllerType)) && (
+            {(!previewOtherModel && controller.connected && !controllerType) && (
                 <div className="pointer-events-none absolute inset-x-0 bottom-0 flex justify-center p-4">
-                    <p role="status" className="rounded-xl border border-slate-300 bg-white/90 px-4 py-3 text-center text-sm text-slate-700 shadow-sm dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-100">
-                        {controller.connected ? "Controller connected, model not available for this type." : "Connect your controller and press a button to begin."}
+                    <p role="status" className="rounded-full border border-white/40 bg-white/70 px-4 py-2 text-center text-xs text-slate-600 backdrop-blur dark:border-slate-600/40 dark:bg-slate-900/60 dark:text-slate-300">
+                        Controller connected, model not available for this type.
                     </p>
                 </div>
             )}

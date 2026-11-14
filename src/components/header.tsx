@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { SunIcon, MoonIcon } from "@radix-ui/react-icons";
 import { Button } from "./ui/button";
 import { useSyncExternalStore, useEffect } from "react";
@@ -31,12 +32,15 @@ const Header = () => {
     }
 
     return (
-        <header className="px-8 py-2 flex">
-            <div className="flex h-20 w-full items-center justify-between">
-                <Link href="/">
-                    <span className="text-2xl text-slate-900 dark:text-slate-50 font-medium">Online Controller Tester</span>
+        <header className="mx-auto w-full max-w-[1600px] px-4 sm:px-6">
+            <div className="flex h-20 w-full items-center justify-between gap-3">
+                <Link href="/" aria-label="Online Controller Tester home" className="flex min-w-0 items-center gap-2.5">
+                    <Image src="/logo.svg" alt="" width={36} height={36} priority className="shrink-0" />
+                    <span className="text-lg font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-xl">
+                        <span className="hidden sm:inline">Online </span>Controller Tester
+                    </span>
                 </Link>
-                <Button variant="outline" onClick={toggleTheme}>
+                <Button variant="outline" size="icon" aria-label={`Switch to ${theme === "light" ? "dark" : "light"} mode`} onClick={toggleTheme} className="shrink-0 rounded-xl">
                     {theme === 'light' ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
                 </Button>
             </div>

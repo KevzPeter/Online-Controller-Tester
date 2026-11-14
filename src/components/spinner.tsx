@@ -31,7 +31,7 @@ const Spinner = () => {
     }, [])
 
     return (
-        <div className="flex h-[420px] w-full min-w-0 flex-col items-center justify-center gap-y-4 sm:h-[560px] lg:h-[clamp(560px,70vh,760px)]">
+        <div className="flex h-[360px] w-full min-w-0 flex-col items-center justify-center gap-y-4 sm:h-[460px] lg:h-[560px]">
             <span className="text-md">{loadingMessage}</span>
             <BarLoader
                 color="#2563EB"
