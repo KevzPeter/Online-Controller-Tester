@@ -1,8 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import { Battery, BatteryCharging, Gauge } from "lucide-react";
-import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
 import { Slider } from "./ui/slider";
 import ControllerAlert from "./controllerAlert";
@@ -31,13 +30,16 @@ import Options from "../../public/assets/Buttons Outline/Black/SVG/Options.svg";
 import TouchPad from "../../public/assets/Buttons Outline/Black/SVG/Touch Pad Press.svg";
 import Home from "../../public/assets/Buttons Outline/Black/SVG/Home.svg";
 
+const indicatorClass = (pressed: boolean) =>
+    `shrink-0 transition-transform duration-75 motion-reduce:transition-none ${pressed
+        ? "scale-95 text-blue-600 dark:text-blue-400"
+        : "text-slate-600 dark:text-slate-300"}`;
+
 const GamePad = () => {
     // Use modular gamepad state hook
     const gamepadState = useGamepadState();
 
-    // Local state for UI concerns
     const calibration = useCalibrationSettings();
-    const [hapticsMessage, setHapticsMessage] = useState("");
 
     // Destructure for cleaner template access
     const { controller, axes, buttons, telemetry } = gamepadState;
@@ -84,140 +86,118 @@ const GamePad = () => {
         );
     }, []);
 
-    const runVibrationTest = useCallback(async () => {
-        if (!controller.connected) {
-            setHapticsMessage("Connect a controller first.");
-            return;
-        }
-
-        try {
-            const gamepad = navigator.getGamepads().find((gp) => gp?.id === controller.name);
-            if (!gamepad) throw new Error("Controller not found");
-
-            const gamepadWithHaptics = gamepad as Omit<Gamepad, "vibrationActuator" | "hapticActuators"> & {
-                vibrationActuator?: {
-                    playEffect?: (
-                        type: string,
-                        params: {
-                            startDelay: number;
-                            duration: number;
-                            weakMagnitude: number;
-                            strongMagnitude: number;
-                        }
-                    ) => Promise<unknown>;
-                };
-                hapticActuators?: ReadonlyArray<{
-                    pulse?: (value: number, duration: number) => Promise<boolean>;
-                }>;
-            };
-
-            if (gamepadWithHaptics.vibrationActuator?.playEffect) {
-                await gamepadWithHaptics.vibrationActuator.playEffect("dual-rumble", {
-                    startDelay: 0,
-                    duration: 220,
-                    weakMagnitude: 0.45,
-                    strongMagnitude: 0.85,
-                });
-                setHapticsMessage("Vibration test sent.");
-                return;
-            }
-
-            if (gamepadWithHaptics.hapticActuators?.[0]?.pulse) {
-                await gamepadWithHaptics.hapticActuators[0].pulse(0.8, 220);
-                setHapticsMessage("Vibration test sent.");
-                return;
-            }
-
-            setHapticsMessage("Haptics are not available on this controller/browser.");
-        } catch {
-            setHapticsMessage("Vibration test failed.");
-        }
-    }, [controller.connected, controller.name]);
-
     return (
-        <div className="basis-1/2 container flex flex-col mx-auto gap-y-4 text-slate-900 dark:text-slate-50">
+        <div className="flex w-full min-w-0 flex-col gap-y-3 text-slate-900 dark:text-slate-50">
             <ControllerAlert controllerName={controller.name} />
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <AnalogStickViz label="Left Stick" x={calibratedX1} y={calibratedY1} />
                 <AnalogStickViz label="Right Stick" x={calibratedX2} y={calibratedY2} />
             </div>
-            <div className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-4 shadow-sm dark:border-slate-700 dark:bg-slate-900/70">
-                <div className="mb-3 flex items-center justify-between gap-3">
-                    <h3 className="text-sm font-semibold tracking-wide">Calibration</h3>
-                    <Button variant="outline" size="sm" onClick={resetCalibration}>Reset Defaults</Button>
+            <details className="group rounded-xl border border-slate-200/80 bg-slate-50/80 shadow-sm dark:border-slate-700 dark:bg-slate-900/70">
+                <summary className="cursor-pointer p-3 text-sm font-semibold tracking-wide text-slate-800 dark:text-slate-100">
+                    Calibration <span className="ml-2 font-normal text-slate-600 dark:text-slate-300">Adjust deadzone and sensitivity</span>
+                </summary>
+                <div className="border-t border-slate-200/80 p-3 dark:border-slate-700">
+                    <div className="mb-3 flex justify-end">
+                        <Button variant="outline" size="sm" onClick={resetCalibration}>Reset Defaults</Button>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-slate-600 dark:text-slate-300">Deadzone: {calibration.deadzone.toFixed(2)}</p>
+                            <Slider value={[calibration.deadzone]} min={0} max={0.3} step={0.01} onValueChange={(value) => updateCalibrationSetting("deadzone", value[0] ?? calibration.deadzone)} />
+                        </div>
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-slate-600 dark:text-slate-300">Trigger Sensitivity: {calibration.triggerSensitivity.toFixed(2)}</p>
+                            <Slider value={[calibration.triggerSensitivity]} min={0.5} max={2} step={0.05} onValueChange={(value) => updateCalibrationSetting("triggerSensitivity", value[0] ?? calibration.triggerSensitivity)} />
+                        </div>
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-slate-600 dark:text-slate-300">Left Stick Sensitivity: {calibration.leftSensitivity.toFixed(2)}</p>
+                            <Slider value={[calibration.leftSensitivity]} min={0.5} max={2} step={0.05} onValueChange={(value) => updateCalibrationSetting("leftSensitivity", value[0] ?? calibration.leftSensitivity)} />
+                        </div>
+                        <div>
+                            <p className="mb-2 text-sm font-medium text-slate-600 dark:text-slate-300">Right Stick Sensitivity: {calibration.rightSensitivity.toFixed(2)}</p>
+                            <Slider value={[calibration.rightSensitivity]} min={0.5} max={2} step={0.05} onValueChange={(value) => updateCalibrationSetting("rightSensitivity", value[0] ?? calibration.rightSensitivity)} />
+                        </div>
+                    </div>
                 </div>
-
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <div>
-                        <p className="mb-2 text-xs font-medium text-slate-600 dark:text-slate-300">Deadzone: {calibration.deadzone.toFixed(2)}</p>
-                        <Slider value={[calibration.deadzone]} min={0} max={0.3} step={0.01} onValueChange={(value) => updateCalibrationSetting("deadzone", value[0] ?? calibration.deadzone)} />
-                    </div>
-                    <div>
-                        <p className="mb-2 text-xs font-medium text-slate-600 dark:text-slate-300">Trigger Sensitivity: {calibration.triggerSensitivity.toFixed(2)}</p>
-                        <Slider value={[calibration.triggerSensitivity]} min={0.5} max={2} step={0.05} onValueChange={(value) => updateCalibrationSetting("triggerSensitivity", value[0] ?? calibration.triggerSensitivity)} />
-                    </div>
-                    <div>
-                        <p className="mb-2 text-xs font-medium text-slate-600 dark:text-slate-300">Left Stick Sensitivity: {calibration.leftSensitivity.toFixed(2)}</p>
-                        <Slider value={[calibration.leftSensitivity]} min={0.5} max={2} step={0.05} onValueChange={(value) => updateCalibrationSetting("leftSensitivity", value[0] ?? calibration.leftSensitivity)} />
-                    </div>
-                    <div>
-                        <p className="mb-2 text-xs font-medium text-slate-600 dark:text-slate-300">Right Stick Sensitivity: {calibration.rightSensitivity.toFixed(2)}</p>
-                        <Slider value={[calibration.rightSensitivity]} min={0.5} max={2} step={0.05} onValueChange={(value) => updateCalibrationSetting("rightSensitivity", value[0] ?? calibration.rightSensitivity)} />
-                    </div>
-                </div>
-
-                {/* <div className="mt-4">
-                    <p className="mb-2 text-xs font-medium text-slate-600 dark:text-slate-300">Axis Inversion</p>
-                    <div className="flex flex-wrap gap-2">
-                        <Button size="sm" variant={calibration.invertLeftX ? "default" : "outline"} onClick={() => updateCalibrationSetting("invertLeftX", !calibration.invertLeftX)}>Invert Left X</Button>
-                        <Button size="sm" variant={calibration.invertLeftY ? "default" : "outline"} onClick={() => updateCalibrationSetting("invertLeftY", !calibration.invertLeftY)}>Invert Left Y</Button>
-                        <Button size="sm" variant={calibration.invertRightX ? "default" : "outline"} onClick={() => updateCalibrationSetting("invertRightX", !calibration.invertRightX)}>Invert Right X</Button>
-                        <Button size="sm" variant={calibration.invertRightY ? "default" : "outline"} onClick={() => updateCalibrationSetting("invertRightY", !calibration.invertRightY)}>Invert Right Y</Button>
-                    </div>
-                </div> */}
-
-                {/* <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <Button size="sm" onClick={runVibrationTest} disabled={!controller.name}>Run Vibration Test</Button>
-                    <span className="text-xs text-slate-500 dark:text-slate-400">Haptics: {telemetry.hapticsSupported ? "Supported" : "Unavailable"}</span>
-                    {hapticsMessage && <span className="text-xs text-slate-500 dark:text-slate-400">{hapticsMessage}</span>}
-                </div> */}
-
-                <div className="mt-4 flex flex-wrap gap-x-6 gap-y-1 text-xs text-slate-600 dark:text-slate-300">
-                    <span className="inline-flex items-center gap-1.5">
-                        {telemetry.batteryCharging ? <BatteryCharging size={14} /> : <Battery size={14} />}
-                        <span>
-                            Battery: {telemetry.batteryLevel !== null ? `${Math.round(telemetry.batteryLevel * 100)}%${telemetry.batteryCharging === true ? " (Charging)" : ""}` : "Unavailable"}
-                        </span>
+            </details>
+            <div className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-600 dark:text-slate-300">
+                <span className="inline-flex items-center gap-1.5">
+                    {telemetry.batteryCharging ? <BatteryCharging size={16} /> : <Battery size={16} />}
+                    <span>
+                        Battery: {telemetry.batteryLevel !== null ? `${Math.round(telemetry.batteryLevel * 100)}%${telemetry.batteryCharging === true ? " (Charging)" : ""}` : "Unavailable"}
                     </span>
-                    <span className="inline-flex items-center gap-1.5">
-                        <Gauge size={14} />
-                        <span>Polling: {telemetry.pollingRate ? `${telemetry.pollingRate.toFixed(0)} Hz` : "--"}</span>
-                    </span>
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                    <Gauge size={16} />
+                    <span>Polling: {telemetry.pollingRate ? `${telemetry.pollingRate.toFixed(0)} Hz` : "--"}</span>
+                </span>
+            </div>
+            <section aria-label="Button feedback" className="rounded-xl border border-slate-200/80 bg-slate-50/80 p-3 shadow-sm dark:border-slate-700 dark:bg-slate-900/70">
+                <div className="grid gap-2 xl:grid-cols-5">
+                    <div className="text-slate-600 dark:text-slate-300">
+                        <h3 className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">D-pad</h3>
+                        <div className="flex justify-center">
+                            <DPadViz pressed={buttons.dpad} />
+                        </div>
+                    </div>
+                    <div className="xl:col-span-4">
+                        <h3 className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">Face buttons</h3>
+                        <div className="grid grid-cols-2 items-center gap-1 sm:grid-cols-4">
+                            <div className="flex flex-col items-center">
+                                <Cross height={72} width={72} fill="currentColor" className={indicatorClass(buttons.x)} role="img" aria-label={`Cross / A: ${buttons.x ? "pressed" : "released"}`} />
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Cross / A</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <Circle height={72} width={72} fill="currentColor" className={indicatorClass(buttons.circle)} role="img" aria-label={`Circle / B: ${buttons.circle ? "pressed" : "released"}`} />
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Circle / B</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <Square height={72} width={72} fill="currentColor" className={indicatorClass(buttons.square)} role="img" aria-label={`Square / X: ${buttons.square ? "pressed" : "released"}`} />
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Square / X</span>
+                            </div>
+                            <div className="flex flex-col items-center">
+                                <Triangle height={72} width={72} fill="currentColor" className={indicatorClass(buttons.triangle)} role="img" aria-label={`Triangle / Y: ${buttons.triangle ? "pressed" : "released"}`} />
+                                <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Triangle / Y</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div className="flex items-center gap-x-4">
-                <DPadViz pressed={buttons.dpad} />
-                <Cross height={buttons.x ? 60 : 64} width={64} fill={buttons.x ? "#0070f3" : "grey"} />
-                <Circle height={buttons.circle ? 60 : 64} width={64} fill={buttons.circle ? "#0070f3" : "grey"} />
-                <Square height={buttons.square ? 60 : 64} width={64} fill={buttons.square ? "#0070f3" : "grey"} />
-                <Triangle height={buttons.triangle ? 60 : 64} width={64} fill={buttons.triangle ? "#0070f3" : "grey"} />
-            </div>
-            <div className="flex gap-x-4">
-                <L1 height={buttons.l1 ? 60 : 64} width={64} fill={buttons.l1 ? "#0070f3" : "grey"} />
-                <R1 height={buttons.r1 ? 60 : 64} width={64} fill={buttons.r1 ? "#0070f3" : "grey"} />
-                <L2 height={buttons.l2 ? 60 : 64} width={64} fill={buttons.l2 ? "#0070f3" : "grey"} />
-                <R2 height={buttons.r2 ? 60 : 64} width={64} fill={buttons.r2 ? "#0070f3" : "grey"} />
-                <L3 height={buttons.l3 ? 60 : 64} width={64} fill={buttons.l3 ? "#0070f3" : "grey"} />
-                <R3 height={buttons.r3 ? 60 : 64} width={64} fill={buttons.r3 ? "#0070f3" : "grey"} />
-            </div>
-            <div className="flex gap-x-4">
-                <Create height={buttons.create ? 60 : 64} width={64} fill="currentColor" color={buttons.create ? "#0070f3" : "grey"} />
-                <Options height={buttons.options ? 60 : 64} width={64} fill="currentColor" color={buttons.options ? "#0070f3" : "grey"} />
-                <TouchPad height={buttons.touchpad ? 60 : 64} width={64} fill="currentColor" color={buttons.touchpad ? "#0070f3" : "grey"} />
-                <Home height={buttons.power ? 60 : 64} width={64} fill={buttons.power ? "#0070f3" : "grey"} />
-            </div>
-            <span className="mt-4"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> Drag the 3D model to rotate. Scroll or pinch to zoom.</span>
-            <span className="mt-2"><Badge className="bg-slate-200 dark:bg-slate-700">Tip</Badge> DualSense and Xbox sticks and buttons animate on the model. System buttons depend on browser and OS support.</span>
+                <div className="mt-2 border-t border-slate-200/80 pt-2 dark:border-slate-700">
+                    <h3 className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">Shoulders &amp; stick clicks</h3>
+                    <div className="flex flex-wrap items-center justify-around gap-1">
+                        <L1 height={72} width={72} fill="currentColor" className={indicatorClass(buttons.l1)} role="img" aria-label={`L1 / LB: ${buttons.l1 ? "pressed" : "released"}`} />
+                        <R1 height={72} width={72} fill="currentColor" className={indicatorClass(buttons.r1)} role="img" aria-label={`R1 / RB: ${buttons.r1 ? "pressed" : "released"}`} />
+                        <L2 height={72} width={72} fill="currentColor" className={indicatorClass(buttons.l2)} role="img" aria-label={`L2 / LT: ${buttons.l2 ? "pressed" : "released"}`} />
+                        <R2 height={72} width={72} fill="currentColor" className={indicatorClass(buttons.r2)} role="img" aria-label={`R2 / RT: ${buttons.r2 ? "pressed" : "released"}`} />
+                        <L3 height={72} width={72} fill="currentColor" className={indicatorClass(buttons.l3)} role="img" aria-label={`L3 / LS: ${buttons.l3 ? "pressed" : "released"}`} />
+                        <R3 height={72} width={72} fill="currentColor" className={indicatorClass(buttons.r3)} role="img" aria-label={`R3 / RS: ${buttons.r3 ? "pressed" : "released"}`} />
+                    </div>
+                </div>
+                <div className="mt-2 border-t border-slate-200/80 pt-2 dark:border-slate-700">
+                    <h3 className="mb-1 text-sm font-semibold text-slate-700 dark:text-slate-200">Menu &amp; system</h3>
+                    <div className="flex flex-wrap items-center justify-around gap-1">
+                        <div className="flex flex-col items-center">
+                            <Create height={72} width={72} fill="currentColor" className={indicatorClass(buttons.create)} role="img" aria-label={`Create / View: ${buttons.create ? "pressed" : "released"}`} />
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Create / View</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <Options height={72} width={72} fill="currentColor" className={indicatorClass(buttons.options)} role="img" aria-label={`Options / Menu: ${buttons.options ? "pressed" : "released"}`} />
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Options / Menu</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <TouchPad height={72} width={72} fill="currentColor" className={indicatorClass(buttons.touchpad)} role="img" aria-label={`Touchpad: ${buttons.touchpad ? "pressed" : "released"}`} />
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">Touchpad</span>
+                        </div>
+                        <div className="flex flex-col items-center">
+                            <Home height={72} width={72} fill="currentColor" className={indicatorClass(buttons.power)} role="img" aria-label={`PS / Xbox: ${buttons.power ? "pressed" : "released"}`} />
+                            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">PS / Xbox</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <p className="text-sm text-slate-600 dark:text-slate-300">Drag the 3D model to rotate; scroll or pinch to zoom. System buttons depend on browser and OS support.</p>
             {controller.type === "xbox" && (
                 <span className="mt-2 text-sm">Elite paddles animate their assigned button. Paddle, profile, sync, and trigger-lock inputs are not separately mapped by the standard browser Gamepad API.</span>
             )}

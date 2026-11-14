@@ -60,3 +60,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .controller-stage {
+    background-color: #d9e5f4;
+    background-image:
+      radial-gradient(ellipse 42% 9% at 50% 72%, rgb(45 67 97 / 24%), transparent 100%),
+      radial-gradient(ellipse 65% 55% at 50% 42%, rgb(255 255 255 / 55%), transparent 75%),
+      radial-gradient(ellipse 75% 55% at 50% 70%, rgb(93 143 199 / 17%), transparent 80%),
+      linear-gradient(145deg, #eaf2fc 0%, #d9e5f4 58%, #c9d9ec 100%);
+  }
+
+  .dark .controller-stage {
+    background-color: #0d1930;
+    background-image:
+      radial-gradient(ellipse 42% 9% at 50% 72%, rgb(0 5 16 / 48%), transparent 100%),
+      radial-gradient(ellipse 65% 55% at 50% 43%, rgb(92 148 214 / 38%), transparent 75%),
+      radial-gradient(ellipse 80% 55% at 50% 85%, rgb(33 79 133 / 24%), transparent 80%),
+      linear-gradient(150deg, #162744 0%, #0e1a30 60%, #090f1d 100%);
+  }
+}
