@@ -33,7 +33,11 @@ factory calibration. Heading is relative, not compass-based, and can drift.
 Use **Reset heading** to recenter heading while preserving the current tilt.
 Drag the model to orbit the camera independently.
 
-The **Gamepad sample** rate is the app's 50 ms polling loop (about 20 Hz), not
+A face-up controller on a table is neutral: the model's buttons face the viewer,
+with the shoulders at the top. Acceleration stays in native XYZ with -1 g on Z
+at rest. Gyro pitch/yaw/roll map separately to model X/Z/-Y.
+
+The **App sampling** rate is the app's 50 ms polling loop (about 20 Hz), not
 the controller's hardware report rate. **HID reports** measures incoming
 supported HID reports independently; UI updates are throttled. Battery
 percentages are estimates from the controller's coarse charge indicator.
